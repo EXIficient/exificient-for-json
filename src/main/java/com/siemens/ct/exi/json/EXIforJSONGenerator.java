@@ -31,7 +31,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 	}
 	
 	public void generate(InputStream is, OutputStream os) throws EXIException, IOException {
-		EXIStreamEncoder streamEncoder = new EXIStreamEncoder(ef);
+		EXIStreamEncoder streamEncoder = ef.createEXIStreamEncoder();
 		
 		EXIBodyEncoder bodyEncoder = streamEncoder.encodeHeader(os);
 		

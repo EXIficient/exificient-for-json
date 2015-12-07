@@ -111,7 +111,7 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 	
 	
 	public void parse(InputStream is, OutputStream os) throws EXIException, IOException {
-		EXIStreamDecoder streamDecoder = new EXIStreamDecoder(ef);
+		EXIStreamDecoder streamDecoder = ef.createEXIStreamDecoder();
 		
 		EXIBodyDecoder bodyDecoder = streamDecoder.decodeHeader(is);
 		
