@@ -1,2 +1,2 @@
 # exificient-for-json
-EXI for JSON - How EXI can be used to represent JSON data efficiently (see http://www.w3.org/XML/EXI/docs/json/exi-for-json.html)
+EXI for JSON - How EXI can be used to represent JSON data efficiently (see <https://www.w3.org/TR/exi-for-json/>)
