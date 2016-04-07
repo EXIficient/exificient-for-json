@@ -32,6 +32,7 @@ import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParser.Event;
 
 import com.siemens.ct.exi.EXIBodyEncoder;
+import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.EXIStreamEncoder;
 import com.siemens.ct.exi.exceptions.EXIException;
 import com.siemens.ct.exi.values.StringValue;
@@ -40,6 +41,10 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 	
 	public EXIforJSONGenerator() throws EXIException, IOException {
 		super();
+	}
+	
+	public EXIforJSONGenerator(EXIFactory ef) throws EXIException, IOException {
+		super(ef);
 	}
 	
 	static final boolean DEBUG = false;

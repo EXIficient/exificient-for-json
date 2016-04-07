@@ -33,6 +33,7 @@ import javax.json.stream.JsonGenerator;
 import javax.json.stream.JsonParser.Event;
 
 import com.siemens.ct.exi.EXIBodyDecoder;
+import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.EXIStreamDecoder;
 import com.siemens.ct.exi.context.QNameContext;
 import com.siemens.ct.exi.exceptions.EXIException;
@@ -52,6 +53,9 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 		super();
 	}
 	
+	public EXIforJSONParser(EXIFactory ef) throws EXIException, IOException {
+		super(ef);
+	}
 	
 	void checkPendingEvent(JsonGenerator generator) {
 		if(jsonEvent != null) {

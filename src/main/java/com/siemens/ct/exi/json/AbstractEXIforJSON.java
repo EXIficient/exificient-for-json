@@ -50,16 +50,22 @@ public abstract class AbstractEXIforJSON {
 	final EXIFactory ef;
 	
 	public AbstractEXIforJSON() throws EXIException, IOException {
-		this.ef = DefaultEXIFactory.newInstance();
+		this(DefaultEXIFactory.newInstance());
+	}
+	
+	public AbstractEXIforJSON(EXIFactory ef) throws EXIException, IOException {
+		this.ef = ef;
 		
-		// setup EXI
+		// setup EXI schema
 		// URL urlXSD = new URL("http://www.w3.org/XML/EXI/docs/json/schema-for-json.xsd");
 		URL urlXSD  = this.getClass().getResource("/schema-for-json.xsd");
 		InputStream isXSD = urlXSD.openStream();
 		Grammars g = GrammarFactory.newInstance().createGrammars(isXSD);
 		isXSD.close();
 		ef.setGrammars(g);
-		ef.setFidelityOptions(FidelityOptions.createStrict());
+		
+		// set to strict
+		ef.getFidelityOptions().setFidelity(FidelityOptions.FEATURE_STRICT, true);
 	}
 	
 }
