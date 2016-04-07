@@ -24,6 +24,7 @@
 package com.siemens.ct.exi.json;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 import com.siemens.ct.exi.EXIFactory;
@@ -49,11 +50,14 @@ public abstract class AbstractEXIforJSON {
 	final EXIFactory ef;
 	
 	public AbstractEXIforJSON() throws EXIException, IOException {
-		this.ef = DefaultEXIFactory.newInstance();;	
+		this.ef = DefaultEXIFactory.newInstance();
 		
 		// setup EXI
-		URL urlXSD = new URL("http://www.w3.org/XML/EXI/docs/json/schema-for-json.xsd");
-		Grammars g = GrammarFactory.newInstance().createGrammars(urlXSD.openStream());
+		// URL urlXSD = new URL("http://www.w3.org/XML/EXI/docs/json/schema-for-json.xsd");
+		URL urlXSD  = this.getClass().getResource("/schema-for-json.xsd");
+		InputStream isXSD = urlXSD.openStream();
+		Grammars g = GrammarFactory.newInstance().createGrammars(isXSD);
+		isXSD.close();
 		ef.setGrammars(g);
 		ef.setFidelityOptions(FidelityOptions.createStrict());
 	}
