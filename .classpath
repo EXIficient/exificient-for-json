@@ -15,14 +15,14 @@
       <attribute value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient/0.9.7-SNAPSHOT/exificient-0.9.7-SNAPSHOT-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-core/0.9.6/exificient-core-0.9.6.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-core/0.9.6/exificient-core-0.9.6-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-core/0.9.7-SNAPSHOT/exificient-core-0.9.7-SNAPSHOT.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-core/0.9.7-SNAPSHOT/exificient-core-0.9.7-SNAPSHOT-sources.jar">
     <attributes>
-      <attribute value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-core/0.9.6/exificient-core-0.9.6-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-core/0.9.7-SNAPSHOT/exificient-core-0.9.7-SNAPSHOT-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
-  <classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-grammars/0.9.6/exificient-grammars-0.9.6.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-grammars/0.9.6/exificient-grammars-0.9.6-sources.jar">
+  <classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-grammars/0.9.7-SNAPSHOT/exificient-grammars-0.9.7-SNAPSHOT.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-grammars/0.9.7-SNAPSHOT/exificient-grammars-0.9.7-SNAPSHOT-sources.jar">
     <attributes>
-      <attribute value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-grammars/0.9.6/exificient-grammars-0.9.6-javadoc.jar!/" name="javadoc_location"/>
+      <attribute value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-grammars/0.9.7-SNAPSHOT/exificient-grammars-0.9.7-SNAPSHOT-javadoc.jar!/" name="javadoc_location"/>
     </attributes>
   </classpathentry>
   <classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0-sources.jar">

@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.math.BigDecimal;
 
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
@@ -74,8 +73,8 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 				case VALUE_NUMBER:
 					if(value.getValueType() == ValueType.FLOAT) {
 						FloatValue fv = (FloatValue) value;
-						// generator.write(fv.toDouble());
-						generator.write(new BigDecimal(fv.getMantissa() + "E" + fv.getExponent()));
+						generator.write(fv.toDouble());
+						// generator.write(new BigDecimal(fv.getMantissa() + "E" + fv.getExponent()));
 					} else {
 						throw new RuntimeException("Not supported number value: " + value);
 					}
