@@ -23,6 +23,7 @@
 
 package com.siemens.ct.exi.json;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
@@ -31,6 +32,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -190,46 +192,54 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_one.json";
 		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_three.json";
 		
-		
-		
-		
-		List<String> jsons = new ArrayList<String>();
-		// Taki
-		jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_one.json");
-		jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_two.json");
-		jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_three.json");
-		
-		// Some other samples
-		jsons.add("./../../../W3C/EXI/docs/json/V2/test/bower.json");
-		jsons.add("./../../../W3C/EXI/docs/json/V2/test/door.jsonld");
-		jsons.add("./../../../W3C/EXI/docs/json/V2/test/package.json");
-		jsons.add("./../../../W3C/EXI/docs/json/V2/test/ui.resizable.jquery.json");
-		
-		// "old" JSON tests
-		// GPX 
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-1pts.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-100pts.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-200pts.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-500pts.json");
-		// JSON Generator
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/01.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/03.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/06.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/10.json");
-		// OpenWheather
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1cities.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-100cities.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-200cities.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-300cities.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-400cities.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-500cities.json");
-		jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1000cities.json");
-		
-		
-		System.out.println("Name; JSON; V1; V2; V2_EFG");
-		for(String json: jsons) {
-			test(json);
+		if(false) {
+			List<String> jsons = new ArrayList<String>();
+			// Taki
+			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_one.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_two.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_three.json");
+			
+			// Some other samples
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/bower.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/door.jsonld");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/package.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/ui.resizable.jquery.json");
+			
+			// "old" JSON tests
+			// GPX 
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-1pts.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-100pts.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-200pts.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-500pts.json");
+			// JSON Generator
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/01.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/03.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/06.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/10.json");
+			// OpenWheather
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-100cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-200cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-300cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-400cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-500cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1000cities.json");
+			
+			
+			System.out.println("Name; JSON; V1; V2; V2_EFG");
+			for(String json: jsons) {
+				test(json);
+			}
+		} else {
+			// String s = "{\n  \"keyNumber\": 123,\n  \"keyArrayStrings\": [\n    \"s1\",\n    \"s2\"\n  ]\n}";
+			String s  = "{\n  \"glossary\": {\n    \"title\": \"example glossary\",\n    \"GlossDiv\": {\n      \"title\": \"S\",\n      \"GlossList\": {\n        \"GlossEntry\": {\n          \"ID\": \"SGML\",\n          \"SortAs\": \"SGML\",\n          \"GlossTerm\": \"Standard Generalized Markup Language\",\n          \"Acronym\": \"SGML\",\n          \"Abbrev\": \"ISO 8879:1986\",\n          \"GlossDef\": {\n            \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\n            \"GlossSeeAlso\": [\n              \"GML\",\n              \"XML\"\n            ]\n          },\n          \"GlossSee\": \"markup\"\n        }\n      }\n    }\n  }\n}";
+			ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+			generateV2(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)), baosV2, getEXIFactoryV2());
+			
 		}
+		
+		
+
 		
 
 	}
@@ -285,7 +295,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 	
 	
 	private static void generateV2(InputStream is, OutputStream os, EXIFactory efV2) throws EXIException, IOException {
-//		DEBUG = System.out;
+		DEBUG = System.out;
 		
 		EXIStreamEncoder streamEncoder = efV2.createEXIStreamEncoder();
 		
@@ -312,10 +322,10 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			case START_OBJECT:
 				events.add(e);
 				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_MAP, null);
-				printDebug("<map>");
+				printDebug("<j:map>");
 				break;
 			case END_OBJECT:
-				printDebug("</map>");
+				printDebug("</j:map>");
 				Event eo = events.remove(events.size()-1);
 				assert(eo == Event.START_OBJECT);
 				bodyEncoder.encodeEndElement();
@@ -324,10 +334,10 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			case START_ARRAY:
 				events.add(e);
 				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_ARRAY, null);
-				printDebug("<array>");
+				printDebug("<j:array>");
 				break;
 			case END_ARRAY:
-				printDebug("</array>");
+				printDebug("</j:array>");
 				Event ea = events.remove(events.size()-1);
 				assert(ea == Event.START_ARRAY);
 				bodyEncoder.encodeEndElement();
@@ -336,7 +346,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			case VALUE_STRING:
 				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_STRING, null);
 				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
-				printDebug("<string>" + parser.getString() + "</string>");
+				printDebug("<j:string>" + parser.getString() + "</j:string>");
 				bodyEncoder.encodeEndElement();
 				checkKeyEnd(events, keys, bodyEncoder);
 				break;
@@ -344,7 +354,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				// TODO use /other/integer if it is an integer value
 				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_NUMBER, null);
 				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
-				printDebug("<number>" + parser.getString() + "</number>");
+				printDebug("<j:number>" + parser.getString() + "</j:number>");
 				bodyEncoder.encodeEndElement();
 				checkKeyEnd(events, keys, bodyEncoder);
 				break;
@@ -353,13 +363,13 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_BOOLEAN, null);
 				String sb = e == Event.VALUE_FALSE ? "false" : "true";
 				bodyEncoder.encodeCharacters(new StringValue(sb));
-				printDebug("<boolean>" + sb + "</boolean>");
+				printDebug("<j:boolean>" + sb + "</j:boolean>");
 				bodyEncoder.encodeEndElement();
 				checkKeyEnd(events, keys, bodyEncoder);
 				break;
 			case VALUE_NULL:
 				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_NULL, null);
-				printDebug("<null />" );
+				printDebug("<j:null />" );
 				bodyEncoder.encodeEndElement();
 				checkKeyEnd(events, keys, bodyEncoder);
 				break;
