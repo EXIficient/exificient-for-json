@@ -44,9 +44,7 @@ import com.siemens.ct.exi.EXIBodyEncoder;
 import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.EXIStreamEncoder;
 import com.siemens.ct.exi.FidelityOptions;
-import com.siemens.ct.exi.GrammarFactory;
 import com.siemens.ct.exi.exceptions.EXIException;
-import com.siemens.ct.exi.grammars.Grammars;
 import com.siemens.ct.exi.helpers.DefaultEXIFactory;
 import com.siemens.ct.exi.values.StringValue;
 
@@ -58,6 +56,14 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 	
 	public EXIforJSONGenerator(EXIFactory ef) throws EXIException, IOException {
 		super(ef);
+	}
+	
+	public EXIforJSONGenerator(String schemaId) throws EXIException, IOException {
+		super(schemaId);
+	}
+	
+	public EXIforJSONGenerator(EXIFactory ef, String schemaId) throws EXIException, IOException {
+		super(ef, schemaId);
 	}
 	
 	static PrintStream DEBUG = null;
@@ -98,12 +104,12 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				key = parser.getString();
 				break;
 			case START_OBJECT:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_MAP, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_MAP, null);
 				if(key == null) {
 					printDebugInd(ind, "<map>");
 				} else {
 					printDebugInd(ind, "<map key=\"" + key + "\">");
-					bodyEncoder.encodeAttribute("", LOCALNAME_KEY, null, new StringValue(key));
+					bodyEncoder.encodeAttribute("", EXI4JSONConstants.LOCALNAME_KEY, null, new StringValue(key));
 					key = null;
 				}
 				ind++;
@@ -114,12 +120,12 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				bodyEncoder.encodeEndElement();
 				break;
 			case START_ARRAY:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_ARRAY, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_ARRAY, null);
 				if(key == null) {
 					printDebugInd(ind, "<array>");
 				} else {
 					printDebugInd(ind, "<array key=\"" + key + "\">");
-					bodyEncoder.encodeAttribute("", LOCALNAME_KEY, null, new StringValue(key));
+					bodyEncoder.encodeAttribute("", EXI4JSONConstants.LOCALNAME_KEY, null, new StringValue(key));
 					key = null;
 				}
 				ind++;
@@ -130,49 +136,49 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				bodyEncoder.encodeEndElement();
 				break;
 			case VALUE_STRING:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_STRING, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_STRING, null);
 				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
 				if(key == null) {
 					printDebugInd(ind, "<string>" + parser.getString() + "</string>");
 				} else {
 					printDebugInd(ind, "<string key=\"" + key + "\">" + parser.getString() + "</string>");
-					bodyEncoder.encodeAttribute("", LOCALNAME_KEY, null, new StringValue(key));
+					bodyEncoder.encodeAttribute("", EXI4JSONConstants.LOCALNAME_KEY, null, new StringValue(key));
 					key = null;
 				}
 				bodyEncoder.encodeEndElement();
 				break;
 			case VALUE_NUMBER:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_NUMBER, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NUMBER, null);
 				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
 				if(key == null) {
 					printDebugInd(ind, "<number>" + parser.getString() + "</number>");
 				} else {
 					printDebugInd(ind, "<number key=\"" + key + "\">" + parser.getString() + "</number>");
-					bodyEncoder.encodeAttribute("", LOCALNAME_KEY, null, new StringValue(key));
+					bodyEncoder.encodeAttribute("", EXI4JSONConstants.LOCALNAME_KEY, null, new StringValue(key));
 					key = null;
 				}
 				bodyEncoder.encodeEndElement();
 				break;
 			case VALUE_FALSE:
 			case VALUE_TRUE:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_BOOLEAN, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_BOOLEAN, null);
 				bodyEncoder.encodeCharacters(new StringValue((e == Event.VALUE_FALSE ? "false" : "true")));
 				if(key == null) {
 					printDebugInd(ind, "<boolean>" + parser.getString() + "</boolean>");
 				} else {
 					printDebugInd(ind, "<boolean key=\"" + key + "\">" + (e == Event.VALUE_FALSE ? "false" : "true") + "</boolean>");
-					bodyEncoder.encodeAttribute("", LOCALNAME_KEY, null, new StringValue(key));
+					bodyEncoder.encodeAttribute("", EXI4JSONConstants.LOCALNAME_KEY, null, new StringValue(key));
 					key = null;
 				}
 				bodyEncoder.encodeEndElement();
 				break;
 			case VALUE_NULL:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_NULL, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NULL, null);
 				if(key == null) {
 					printDebugInd(ind, "<null />" );
 				} else {
 					printDebugInd(ind, "<null key=\"" + key + "\" />");
-					bodyEncoder.encodeAttribute("", LOCALNAME_KEY, null, new StringValue(key));
+					bodyEncoder.encodeAttribute("", EXI4JSONConstants.LOCALNAME_KEY, null, new StringValue(key));
 					key = null;
 				}
 				bodyEncoder.encodeEndElement();
@@ -192,7 +198,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_one.json";
 		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_three.json";
 		
-		if(false) {
+		if(true) {
 			List<String> jsons = new ArrayList<String>();
 			// Taki
 			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_one.json");
@@ -226,7 +232,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1000cities.json");
 			
 			
-			System.out.println("Name; JSON; V1; V2; V2_EFG");
+			System.out.println("Name; JSON; V1; V2");
 			for(String json: jsons) {
 				test(json);
 			}
@@ -237,17 +243,13 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			generateV2(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)), baosV2, getEXIFactoryV2());
 			
 		}
-		
-		
-
-		
 
 	}
 	
 	private static void test(String json) throws FileNotFoundException, EXIException, IOException {
 		ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
 		{
-			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
 			e4jGenerator.generate(new FileInputStream(json), baosV1);
 			// System.out.println("Size V1: " + baosV1.size());
 		}
@@ -258,50 +260,28 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			// System.out.println("Size V2: " + baosV2.size());
 		}
 		
-		ByteArrayOutputStream baosV2_EFG = new ByteArrayOutputStream();
-		{
-			generateV2(new FileInputStream(json), baosV2_EFG, getEXIFactoryV2_EFG());
-			// System.out.println("Size V2_EFG: " + baosV2_EFG.size());
-		}
-		
-		System.out.println(json + "; " + (new File(json)).length() + "; " + baosV1.size() + "; " + baosV2.size() + "; " + baosV2_EFG.size());
+		System.out.println(json + "; " + (new File(json)).length() + "; " + baosV1.size() + "; " + baosV2.size());
 	}
 	
 	
 	private static EXIFactory getEXIFactoryV2() throws EXIException, IOException {
 		EXIFactory efV2 = DefaultEXIFactory.newInstance();
-		// setup EXI schema
-		// URL urlXSD = new URL("http://www.w3.org/XML/EXI/docs/json/schema-for-json.xsd");
-		// URL urlXSD  = this.getClass().getResource("/schema-for-json.xsd");
-		// InputStream isXSD = urlXSD.openStream();
-		InputStream isXSD = new FileInputStream("./../../../W3C/EXI/docs/json/V2/schema-for-json-V2b.xsd");
-		Grammars g = GrammarFactory.newInstance().createGrammars(isXSD);
-		isXSD.close();
-		efV2.setGrammars(g);
-		
+		// setup EXI schema/grammars
+		efV2.setGrammars(AbstractEXIforJSON.loadGrammars2());
 		// set to strict
 		efV2.getFidelityOptions().setFidelity(FidelityOptions.FEATURE_STRICT, true);
 		
 		return efV2;
 	}
 	
-	// (i.e. Element Fragment Grammar)
-	private static EXIFactory getEXIFactoryV2_EFG() throws EXIException, IOException {
-		EXIFactory efV2_EFG =  getEXIFactoryV2();
-		efV2_EFG.setUsingNonEvolvingGrammars(true);
-		
-		return efV2_EFG;
-	}
-	
-	
-	private static void generateV2(InputStream is, OutputStream os, EXIFactory efV2) throws EXIException, IOException {
-		DEBUG = System.out;
+	private static void generateV2(InputStream isJSON, OutputStream osEXI4JSON, EXIFactory efV2) throws EXIException, IOException {
+		// DEBUG = System.out;
 		
 		EXIStreamEncoder streamEncoder = efV2.createEXIStreamEncoder();
 		
-		EXIBodyEncoder bodyEncoder = streamEncoder.encodeHeader(os);
+		EXIBodyEncoder bodyEncoder = streamEncoder.encodeHeader(osEXI4JSON);
 		
-		JsonParser parser = Json.createParser(is);
+		JsonParser parser = Json.createParser(isJSON);
 		
 		bodyEncoder.encodeStartDocument();
 		
@@ -315,13 +295,26 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			case KEY_NAME:
 				events.add(e);
 				String key = parser.getString();
+				if (EXI4JSONConstants.LOCALNAME_MAP.equals(key) || EXI4JSONConstants.LOCALNAME_ARRAY.equals(key)
+						|| EXI4JSONConstants.LOCALNAME_STRING.equals(key)
+						|| EXI4JSONConstants.LOCALNAME_NUMBER.equals(key)
+						|| EXI4JSONConstants.LOCALNAME_BOOLEAN.equals(key)
+						|| EXI4JSONConstants.LOCALNAME_NULL.equals(key)
+						|| EXI4JSONConstants.LOCALNAME_OTHER.equals(key)) {
+					// Key-name Escaping (https://www.w3.org/TR/2016/WD-exi-for-json-20160823/#keynameEscaping)
+					// --> Conflict with existing EXI4JSON global schema element name
+					key = EXI4JSONConstants.ESCAPE_START_CHARACTER + EXI4JSONConstants.ESCAPE_END_CHARACTER + key;
+				}
+				// TODO represent '_' itself
+				// TODO Conflict with NCName character(s)
+				
 				keys.add(key);
-				bodyEncoder.encodeStartElement("", key, null); // NAMESPACE_EXI4JSON
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, key, null);
 				printDebug("<" + key +">");
 				break;
 			case START_OBJECT:
 				events.add(e);
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_MAP, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_MAP, null);
 				printDebug("<j:map>");
 				break;
 			case END_OBJECT:
@@ -333,7 +326,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				break;
 			case START_ARRAY:
 				events.add(e);
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_ARRAY, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_ARRAY, null);
 				printDebug("<j:array>");
 				break;
 			case END_ARRAY:
@@ -344,7 +337,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				checkKeyEnd(events, keys, bodyEncoder);
 				break;
 			case VALUE_STRING:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_STRING, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_STRING, null);
 				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
 				printDebug("<j:string>" + parser.getString() + "</j:string>");
 				bodyEncoder.encodeEndElement();
@@ -352,7 +345,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				break;
 			case VALUE_NUMBER:
 				// TODO use /other/integer if it is an integer value
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_NUMBER, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NUMBER, null);
 				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
 				printDebug("<j:number>" + parser.getString() + "</j:number>");
 				bodyEncoder.encodeEndElement();
@@ -360,7 +353,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				break;
 			case VALUE_FALSE:
 			case VALUE_TRUE:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_BOOLEAN, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_BOOLEAN, null);
 				String sb = e == Event.VALUE_FALSE ? "false" : "true";
 				bodyEncoder.encodeCharacters(new StringValue(sb));
 				printDebug("<j:boolean>" + sb + "</j:boolean>");
@@ -368,7 +361,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				checkKeyEnd(events, keys, bodyEncoder);
 				break;
 			case VALUE_NULL:
-				bodyEncoder.encodeStartElement(NAMESPACE_EXI4JSON, LOCALNAME_NULL, null);
+				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NULL, null);
 				printDebug("<j:null />" );
 				bodyEncoder.encodeEndElement();
 				checkKeyEnd(events, keys, bodyEncoder);

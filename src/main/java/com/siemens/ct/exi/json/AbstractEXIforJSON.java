@@ -35,17 +35,20 @@ import com.siemens.ct.exi.grammars.Grammars;
 import com.siemens.ct.exi.helpers.DefaultEXIFactory;
 
 public abstract class AbstractEXIforJSON {
-
-	static final String NAMESPACE_EXI4JSON = "http://www.w3.org/2015/EXI/json";
 	
-	static final String LOCALNAME_MAP = "map";
-	static final String LOCALNAME_ARRAY = "array";
-	static final String LOCALNAME_STRING = "string";
-	static final String LOCALNAME_NUMBER = "number";
-	static final String LOCALNAME_BOOLEAN = "boolean";
-	static final String LOCALNAME_NULL = "null";
-	static final String LOCALNAME_KEY = "key";
+	/**
+	 * EXI Grammars for XML schema from https://www.w3.org/TR/2016/WD-exi-for-json-20160128/
+	 * 
+	 * @see XML_SCHEMA_FOR_JSON
+	 */
+	static Grammars g1;
 	
+	/**
+	 * EXI Grammars for XML schema from https://www.w3.org/TR/2016/WD-exi-for-json-20160823/
+	 * 
+	 * @see XML_SCHEMA_FOR_EXI4JSON
+	 */
+	static Grammars g2;
 	
 	final EXIFactory ef;
 	
@@ -54,18 +57,58 @@ public abstract class AbstractEXIforJSON {
 	}
 	
 	public AbstractEXIforJSON(EXIFactory ef) throws EXIException, IOException {
+		// default schema
+		this(ef, EXI4JSONConstants.XML_SCHEMA_FOR_EXI4JSON);
+	}
+	
+	public AbstractEXIforJSON(String schemaId) throws EXIException, IOException {
+		// default schema EXI factory
+		this(DefaultEXIFactory.newInstance(), schemaId);
+	}
+	
+	
+	public AbstractEXIforJSON(EXIFactory ef, String schemaId) throws EXIException, IOException {
 		this.ef = ef;
 		
-		// setup EXI schema
-		// URL urlXSD = new URL("http://www.w3.org/XML/EXI/docs/json/schema-for-json.xsd");
-		URL urlXSD  = this.getClass().getResource("/schema-for-json.xsd");
-		InputStream isXSD = urlXSD.openStream();
-		Grammars g = GrammarFactory.newInstance().createGrammars(isXSD);
-		isXSD.close();
-		ef.setGrammars(g);
+		if(ef.getGrammars().isSchemaInformed()) {
+			// schema-informed grammars (dedicated grammars in use)
+		} else {
+			// setup EXI schema
+			Grammars g;
+			if(EXI4JSONConstants.XML_SCHEMA_FOR_JSON.equals(schemaId)) {
+				g = loadGrammars1();
+			} else {
+				// default
+				g = loadGrammars2();
+			}
+			ef.setGrammars(g);
+		}
+
 		
 		// set to strict
 		ef.getFidelityOptions().setFidelity(FidelityOptions.FEATURE_STRICT, true);
+	}
+	
+	static Grammars loadGrammars1() throws IOException, EXIException {
+		if(g1 == null) {
+			URL urlXSD  =  AbstractEXIforJSON.class.getResource("/schema-for-json.xsd");
+			InputStream isXSD = urlXSD.openStream();
+			g1 = GrammarFactory.newInstance().createGrammars(isXSD);
+			isXSD.close();			
+		}
+		
+		return g1;
+	}
+	
+	static Grammars loadGrammars2() throws IOException, EXIException {
+		if(g2 == null) {
+			URL urlXSD  =  AbstractEXIforJSON.class.getResource("/exi4json.xsd");
+			InputStream isXSD = urlXSD.openStream();
+			g2 = GrammarFactory.newInstance().createGrammars(isXSD);
+			isXSD.close();			
+		}
+		
+		return g2;
 	}
 	
 }

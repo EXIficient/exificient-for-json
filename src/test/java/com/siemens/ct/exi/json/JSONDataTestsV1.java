@@ -20,7 +20,7 @@ import com.siemens.ct.exi.helpers.DefaultEXIFactory;
 
 import junit.framework.TestCase;
 
-public class JSONDataTests extends TestCase {
+public class JSONDataTestsV1 extends TestCase {
 
 	List<String> sharedStrings = Arrays.asList(new String[] { "@context", "@id", "@type", "@value", "Brightness", "Car",
 			"CoAP", "DecreaseColor", "Distance", "Door", "EXI", "EXI4JSON", "Fan", "HTTP", "IncreaseColor", "JSON",
@@ -79,14 +79,14 @@ public class JSONDataTests extends TestCase {
 		EXIforJSONParser e4jParser;
 		
 		if(sharedStrings == null) {
-			e4jGenerator = new EXIforJSONGenerator();
-			e4jParser = new EXIforJSONParser();
+			e4jGenerator = new EXIforJSONGenerator(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
+			e4jParser = new EXIforJSONParser(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
 		} else {
 			EXIFactory ef = DefaultEXIFactory.newInstance();
 			ef.setSharedStrings(sharedStrings);
 			
-			e4jGenerator = new EXIforJSONGenerator(ef);
-			e4jParser = new EXIforJSONParser(ef);
+			e4jGenerator = new EXIforJSONGenerator(ef, EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
+			e4jParser = new EXIforJSONParser(ef, EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
 		}
 		
 		// generate exi-for-json

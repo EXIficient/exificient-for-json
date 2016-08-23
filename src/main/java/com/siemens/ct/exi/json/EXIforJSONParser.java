@@ -57,6 +57,14 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 		super(ef);
 	}
 	
+	public EXIforJSONParser(String schemaId) throws EXIException, IOException {
+		super(schemaId);
+	}
+	
+	public EXIforJSONParser(EXIFactory ef, String schemaId) throws EXIException, IOException {
+		super(ef, schemaId);
+	}
+	
 	void checkPendingEvent(JsonGenerator generator) {
 		if(jsonEvent != null) {
 			if(key == null) {
@@ -157,7 +165,7 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 				break;
 			case ATTRIBUTE:
 				QNameContext qncAT = bodyDecoder.decodeAttribute();
-				if(!LOCALNAME_KEY.equals(qncAT.getLocalName())) {
+				if(!EXI4JSONConstants.LOCALNAME_KEY.equals(qncAT.getLocalName())) {
 					throw new RuntimeException("Not supported EXI attribute: " + qncAT);
 				}
 				Value avalue = bodyDecoder.getAttributeValue();
@@ -171,22 +179,22 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 			case START_ELEMENT:
 				QNameContext qncSE = bodyDecoder.decodeStartElement();
 				checkPendingEvent(generator);
-				if(LOCALNAME_MAP.equals(qncSE.getLocalName())) {
+				if(EXI4JSONConstants.LOCALNAME_MAP.equals(qncSE.getLocalName())) {
 					// wait for possible key
 					jsonEvent = Event.START_OBJECT;
-				} else if(LOCALNAME_ARRAY.equals(qncSE.getLocalName())) {
+				} else if(EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncSE.getLocalName())) {
 					// wait for possible key
 					jsonEvent = Event.START_ARRAY;
-				} else if(LOCALNAME_STRING.equals(qncSE.getLocalName())) {
+				} else if(EXI4JSONConstants.LOCALNAME_STRING.equals(qncSE.getLocalName())) {
 					// wait for possible key
 					jsonEvent = Event.VALUE_STRING;
-				} else if(LOCALNAME_NUMBER.equals(qncSE.getLocalName())) {
+				} else if(EXI4JSONConstants.LOCALNAME_NUMBER.equals(qncSE.getLocalName())) {
 					// wait for possible key
 					jsonEvent = Event.VALUE_NUMBER;
-				} else if(LOCALNAME_BOOLEAN.equals(qncSE.getLocalName())) {
+				} else if(EXI4JSONConstants.LOCALNAME_BOOLEAN.equals(qncSE.getLocalName())) {
 					// wait for possible key
 					jsonEvent = Event.VALUE_FALSE;
-				} else if(LOCALNAME_NULL.equals(qncSE.getLocalName())) {
+				} else if(EXI4JSONConstants.LOCALNAME_NULL.equals(qncSE.getLocalName())) {
 					// wait for possible key
 					jsonEvent = Event.VALUE_NULL;
 				} else {
@@ -196,9 +204,9 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 			case END_ELEMENT:
 				QNameContext qncEE = bodyDecoder.decodeEndElement();
 				checkPendingEvent(generator);
-				if(LOCALNAME_MAP.equals(qncEE.getLocalName())) {
+				if(EXI4JSONConstants.LOCALNAME_MAP.equals(qncEE.getLocalName())) {
 					generator.writeEnd();
-				} else if(LOCALNAME_ARRAY.equals(qncEE.getLocalName())) {
+				} else if(EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncEE.getLocalName())) {
 					generator.writeEnd();
 				}
 				break;
