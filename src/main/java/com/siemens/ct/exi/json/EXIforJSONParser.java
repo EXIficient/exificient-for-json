@@ -155,7 +155,7 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 		}
 	}
 	
-	private void parseV1(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
+	protected void parseV1(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
 		EXIStreamDecoder streamDecoder = ef.createEXIStreamDecoder();
 		
 		EXIBodyDecoder bodyDecoder = streamDecoder.decodeHeader(isEXI4JSON);
@@ -228,7 +228,7 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 	}
 	
 	
-	private void parseV2(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
+	protected void parseV2(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
 		EXIStreamDecoder streamDecoder = ef.createEXIStreamDecoder();
 		
 		EXIBodyDecoder bodyDecoder = streamDecoder.decodeHeader(isEXI4JSON);
@@ -245,15 +245,15 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 			case END_DOCUMENT:
 				bodyDecoder.decodeEndDocument();
 				break;
-			case ATTRIBUTE:
-				QNameContext qncAT = bodyDecoder.decodeAttribute();
-				if(!EXI4JSONConstants.LOCALNAME_KEY.equals(qncAT.getLocalName())) {
-					throw new RuntimeException("Not supported EXI attribute: " + qncAT);
-				}
-				Value avalue = bodyDecoder.getAttributeValue();
-				key = avalue.toString();
-//				checkPendingEvent(generator, jsonEvent, value.toString());
-				break;
+//			case ATTRIBUTE:
+//				QNameContext qncAT = bodyDecoder.decodeAttribute();
+//				if(!EXI4JSONConstants.LOCALNAME_KEY.equals(qncAT.getLocalName())) {
+//					throw new RuntimeException("Not supported EXI attribute: " + qncAT);
+//				}
+//				Value avalue = bodyDecoder.getAttributeValue();
+//				key = avalue.toString();
+////				checkPendingEvent(generator, jsonEvent, value.toString());
+//				break;
 			case CHARACTERS:
 				value = bodyDecoder.decodeCharacters();
 				checkPendingEvent(generator);
@@ -261,6 +261,7 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 			case START_ELEMENT_NS:
 				// key element
 				key = bodyDecoder.decodeStartElement().getLocalName();
+				key = unescapeKey(key);
 				break;
 			case START_ELEMENT:
 			case START_ELEMENT_GENERIC:
@@ -296,8 +297,9 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 					// TODO other element
 					throw new RuntimeException("'other' element not yet supported!");
 				} else {
-					// key element
-					key = bodyDecoder.decodeStartElement().getLocalName();
+					// key element --> not necessary here : MUST BE START_ELEMENT_NS
+					// key = bodyDecoder.decodeStartElement().getLocalName();
+					throw new RuntimeException("Unexpected element " + qncSE);
 				}
 				break;
 			case END_ELEMENT:
@@ -315,6 +317,17 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 		}
 		
 		generator.flush();
+	}
+	
+	protected String unescapeKey(String key) {
+		// conflicting names
+		if(key.length() > 2 && key.charAt(0) == EXI4JSONConstants.ESCAPE_START_CHARACTER && key.charAt(1) == EXI4JSONConstants.ESCAPE_END_CHARACTER) {
+			key = key.substring(2);
+		}
+		// TODO represent '_' itself
+		// TODO Conflict with NCName character(s)
+		
+		return key;
 	}
 	
 //	public static void main(String[] args) throws EXIException, IOException {

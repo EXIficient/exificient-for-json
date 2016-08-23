@@ -7,33 +7,34 @@ import java.io.InputStream;
 import java.util.List;
 
 import org.json.JSONException;
+import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.exceptions.EXIException;
 import com.siemens.ct.exi.helpers.DefaultEXIFactory;
 
-public class JSONDataTestsV2 extends AbstractJSONDataTests {	
+public class JSONDataTestsV2 extends AbstractJSONDataTests {
 
 	protected int _test(String expected) throws EXIException, IOException, JSONException {
 		return _test(expected, null);
 	}
-	
+
 	protected int _test(String expected, List<String> sharedStrings) throws EXIException, IOException, JSONException {
 		EXIforJSONGenerator e4jGenerator;
 		EXIforJSONParser e4jParser;
-		
-		if(sharedStrings == null) {
+
+		if (sharedStrings == null) {
 			e4jGenerator = new EXIforJSONGenerator();
 			e4jParser = new EXIforJSONParser();
 		} else {
 			EXIFactory ef = DefaultEXIFactory.newInstance();
 			ef.setSharedStrings(sharedStrings);
-			
+
 			e4jGenerator = new EXIforJSONGenerator(ef);
 			e4jParser = new EXIforJSONParser(ef);
 		}
-		
+
 		// generate exi-for-json
 		InputStream is = new ByteArrayInputStream(expected.getBytes()); //
 		ByteArrayOutputStream baosEXI = new ByteArrayOutputStream();
@@ -50,8 +51,68 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 		// String expected = readFile(path);
 		// actual = actual.replace("1.0", "1.001"); // test
 		JSONAssert.assertEquals(expected, actual, true);
-		
+
 		return baosEXI.size();
+	}
+
+	@Test
+	public void testEscapeKey0() throws EXIException, IOException, JSONException {
+		String key = "normalKey";
+		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = e4jGenerator.escapeKey(key);
+
+		assertTrue(key.equals(ekey));
+
+		EXIforJSONParser e4jParser = new EXIforJSONParser();
+		String ukey = e4jParser.unescapeKey(ekey);
+		assertTrue(ukey.equals(key));
+	}
+
+	@Test
+	public void testEscapeKey1() throws EXIException, IOException, JSONException {
+		String key = EXI4JSONConstants.LOCALNAME_NUMBER; // "number"
+		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = e4jGenerator.escapeKey(key);
+		
+		assertFalse(key.equals(ekey));
+		assertTrue((String.valueOf(EXI4JSONConstants.ESCAPE_START_CHARACTER)+String.valueOf(EXI4JSONConstants.ESCAPE_END_CHARACTER)+EXI4JSONConstants.LOCALNAME_NUMBER).equals(ekey));
+		
+		EXIforJSONParser e4jParser = new EXIforJSONParser();
+		String ukey = e4jParser.unescapeKey(ekey);
+		
+		assertTrue(ukey.equals(key));
+	}
+
+	@Test
+	public void testEscapeKey2() throws EXIException, IOException, JSONException {
+		String key = "a number";
+		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = e4jGenerator.escapeKey(key);
+
+		assertFalse(key.equals(ekey));
+		assertTrue("a_32.number".equals(ekey));
+		
+		// TODO 
+	}
+
+	@Test
+	public void testEscapeKey3() throws EXIException, IOException, JSONException {
+		String key = "_foo";
+		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = e4jGenerator.escapeKey(key);
+
+		assertFalse(key.equals(ekey));
+		assertTrue("_95.foo".equals(ekey));
+	}
+	
+	@Test
+	public void testEscapeKey4() throws EXIException, IOException, JSONException {
+		String key = "foo_.A";
+		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = e4jGenerator.escapeKey(key);
+
+		assertFalse(key.equals(ekey));
+		assertTrue("foo_95..A".equals(ekey));
 	}
 
 }
