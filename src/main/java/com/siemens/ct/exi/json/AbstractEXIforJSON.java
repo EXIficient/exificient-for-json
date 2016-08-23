@@ -51,6 +51,7 @@ public abstract class AbstractEXIforJSON {
 	static Grammars g2;
 	
 	final EXIFactory ef;
+	final String schemaId;
 	
 	public AbstractEXIforJSON() throws EXIException, IOException {
 		this(DefaultEXIFactory.newInstance());
@@ -69,6 +70,7 @@ public abstract class AbstractEXIforJSON {
 	
 	public AbstractEXIforJSON(EXIFactory ef, String schemaId) throws EXIException, IOException {
 		this.ef = ef;
+		this.schemaId = schemaId;
 		
 		if(ef.getGrammars().isSchemaInformed()) {
 			// schema-informed grammars (dedicated grammars in use)

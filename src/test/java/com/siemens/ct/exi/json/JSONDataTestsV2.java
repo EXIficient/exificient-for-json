@@ -13,7 +13,7 @@ import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.exceptions.EXIException;
 import com.siemens.ct.exi.helpers.DefaultEXIFactory;
 
-public class JSONDataTestsV1 extends AbstractJSONDataTests {
+public class JSONDataTestsV2 extends AbstractJSONDataTests {	
 
 	protected int _test(String expected) throws EXIException, IOException, JSONException {
 		return _test(expected, null);
@@ -24,14 +24,14 @@ public class JSONDataTestsV1 extends AbstractJSONDataTests {
 		EXIforJSONParser e4jParser;
 		
 		if(sharedStrings == null) {
-			e4jGenerator = new EXIforJSONGenerator(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
-			e4jParser = new EXIforJSONParser(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
+			e4jGenerator = new EXIforJSONGenerator();
+			e4jParser = new EXIforJSONParser();
 		} else {
 			EXIFactory ef = DefaultEXIFactory.newInstance();
 			ef.setSharedStrings(sharedStrings);
 			
-			e4jGenerator = new EXIforJSONGenerator(ef, EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
-			e4jParser = new EXIforJSONParser(ef, EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
+			e4jGenerator = new EXIforJSONGenerator(ef);
+			e4jParser = new EXIforJSONParser(ef);
 		}
 		
 		// generate exi-for-json

@@ -28,6 +28,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -43,9 +44,7 @@ import javax.json.stream.JsonParser.Event;
 import com.siemens.ct.exi.EXIBodyEncoder;
 import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.EXIStreamEncoder;
-import com.siemens.ct.exi.FidelityOptions;
 import com.siemens.ct.exi.exceptions.EXIException;
-import com.siemens.ct.exi.helpers.DefaultEXIFactory;
 import com.siemens.ct.exi.values.StringValue;
 
 public class EXIforJSONGenerator extends AbstractEXIforJSON {
@@ -85,12 +84,98 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 		}
 	}
 	
-	public void generate(InputStream is, OutputStream os) throws EXIException, IOException {
+	public void generate(InputStream isJSON, OutputStream osEXI4JSON) throws EXIException, IOException {
+		if(EXI4JSONConstants.XML_SCHEMA_FOR_JSON.equals(schemaId)) {
+			generateV1(isJSON, osEXI4JSON);
+		} else {
+			generateV2(isJSON, osEXI4JSON);
+		}
+	}
+	
+	
+	public static void main(String[] args) throws FileNotFoundException, EXIException, IOException {
+		// TEST V2
+		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_one.json";
+		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_three.json";
+		
+		if(false) {
+			List<String> jsons = new ArrayList<String>();
+			// Taki
+			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_one.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_two.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_three.json");
+			
+			// Some other samples
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/bower.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/door.jsonld");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/package.json");
+			jsons.add("./../../../W3C/EXI/docs/json/V2/test/ui.resizable.jquery.json");
+			
+			// "old" JSON tests
+			// GPX 
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-1pts.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-100pts.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-200pts.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-500pts.json");
+			// JSON Generator
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/01.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/03.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/06.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/10.json");
+			// OpenWheather
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-100cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-200cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-300cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-400cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-500cities.json");
+			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1000cities.json");
+			
+			
+			System.out.println("Name; JSON; V1; V2");
+			for(String json: jsons) {
+				test(json);
+			}
+		} else {
+			// String s = "{\n  \"keyNumber\": 123,\n  \"keyArrayStrings\": [\n    \"s1\",\n    \"s2\"\n  ]\n}";
+			String s  = "{\n  \"glossary\": {\n    \"title\": \"example glossary\",\n    \"GlossDiv\": {\n      \"title\": \"S\",\n      \"GlossList\": {\n        \"GlossEntry\": {\n          \"ID\": \"SGML\",\n          \"SortAs\": \"SGML\",\n          \"GlossTerm\": \"Standard Generalized Markup Language\",\n          \"Acronym\": \"SGML\",\n          \"Abbrev\": \"ISO 8879:1986\",\n          \"GlossDef\": {\n            \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\n            \"GlossSeeAlso\": [\n              \"GML\",\n              \"XML\"\n            ]\n          },\n          \"GlossSee\": \"markup\"\n        }\n      }\n    }\n  }\n}";
+			ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+			e4jGenerator.generate(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)), baosV2);
+			
+			File f = File.createTempFile("exi4json", "exi");
+			FileOutputStream fos = new FileOutputStream(f);
+			fos.write(baosV2.toByteArray());
+			fos.close();
+			System.out.println("EXI4JSON Written to " + f);
+		}
+
+	}
+	
+	private static void test(String json) throws FileNotFoundException, EXIException, IOException {
+		ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
+		{
+			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
+			e4jGenerator.generate(new FileInputStream(json), baosV1);
+			// System.out.println("Size V1: " + baosV1.size());
+		}
+		
+		ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+		{
+			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+			e4jGenerator.generate(new FileInputStream(json), baosV2);
+			// System.out.println("Size V2: " + baosV2.size());
+		}
+		
+		System.out.println(json + "; " + (new File(json)).length() + "; " + baosV1.size() + "; " + baosV2.size());
+	}
+	
+	private void generateV1(InputStream isJSON, OutputStream osEXI4JSON) throws EXIException, IOException {
 		EXIStreamEncoder streamEncoder = ef.createEXIStreamEncoder();
 		
-		EXIBodyEncoder bodyEncoder = streamEncoder.encodeHeader(os);
+		EXIBodyEncoder bodyEncoder = streamEncoder.encodeHeader(osEXI4JSON);
 		
-		JsonParser parser = Json.createParser(is);
+		JsonParser parser = Json.createParser(isJSON);
 		
 		int ind = 0;
 		String key = null;
@@ -192,92 +277,10 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 		bodyEncoder.flush();
 	}
 	
-	
-	public static void main(String[] args) throws FileNotFoundException, EXIException, IOException {
-		// TEST V2
-		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_one.json";
-		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_three.json";
-		
-		if(true) {
-			List<String> jsons = new ArrayList<String>();
-			// Taki
-			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_one.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_two.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_three.json");
-			
-			// Some other samples
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/bower.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/door.jsonld");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/package.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/ui.resizable.jquery.json");
-			
-			// "old" JSON tests
-			// GPX 
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-1pts.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-100pts.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-200pts.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-500pts.json");
-			// JSON Generator
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/01.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/03.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/06.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/10.json");
-			// OpenWheather
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-100cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-200cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-300cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-400cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-500cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1000cities.json");
-			
-			
-			System.out.println("Name; JSON; V1; V2");
-			for(String json: jsons) {
-				test(json);
-			}
-		} else {
-			// String s = "{\n  \"keyNumber\": 123,\n  \"keyArrayStrings\": [\n    \"s1\",\n    \"s2\"\n  ]\n}";
-			String s  = "{\n  \"glossary\": {\n    \"title\": \"example glossary\",\n    \"GlossDiv\": {\n      \"title\": \"S\",\n      \"GlossList\": {\n        \"GlossEntry\": {\n          \"ID\": \"SGML\",\n          \"SortAs\": \"SGML\",\n          \"GlossTerm\": \"Standard Generalized Markup Language\",\n          \"Acronym\": \"SGML\",\n          \"Abbrev\": \"ISO 8879:1986\",\n          \"GlossDef\": {\n            \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\n            \"GlossSeeAlso\": [\n              \"GML\",\n              \"XML\"\n            ]\n          },\n          \"GlossSee\": \"markup\"\n        }\n      }\n    }\n  }\n}";
-			ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
-			generateV2(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)), baosV2, getEXIFactoryV2());
-			
-		}
-
-	}
-	
-	private static void test(String json) throws FileNotFoundException, EXIException, IOException {
-		ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
-		{
-			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
-			e4jGenerator.generate(new FileInputStream(json), baosV1);
-			// System.out.println("Size V1: " + baosV1.size());
-		}
-		
-		ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
-		{
-			generateV2(new FileInputStream(json), baosV2, getEXIFactoryV2());
-			// System.out.println("Size V2: " + baosV2.size());
-		}
-		
-		System.out.println(json + "; " + (new File(json)).length() + "; " + baosV1.size() + "; " + baosV2.size());
-	}
-	
-	
-	private static EXIFactory getEXIFactoryV2() throws EXIException, IOException {
-		EXIFactory efV2 = DefaultEXIFactory.newInstance();
-		// setup EXI schema/grammars
-		efV2.setGrammars(AbstractEXIforJSON.loadGrammars2());
-		// set to strict
-		efV2.getFidelityOptions().setFidelity(FidelityOptions.FEATURE_STRICT, true);
-		
-		return efV2;
-	}
-	
-	private static void generateV2(InputStream isJSON, OutputStream osEXI4JSON, EXIFactory efV2) throws EXIException, IOException {
+	private void generateV2(InputStream isJSON, OutputStream osEXI4JSON) throws EXIException, IOException {
 		// DEBUG = System.out;
 		
-		EXIStreamEncoder streamEncoder = efV2.createEXIStreamEncoder();
+		EXIStreamEncoder streamEncoder = ef.createEXIStreamEncoder();
 		
 		EXIBodyEncoder bodyEncoder = streamEncoder.encodeHeader(osEXI4JSON);
 		
@@ -381,7 +384,6 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			printDebug("</" + keys.remove(keys.size()-1) +">");
 			events.remove(events.size()-1);
 		}
-		
 	}
 
 	

@@ -146,12 +146,21 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 	
 	
 	
-	public void parse(InputStream is, OutputStream os) throws EXIException, IOException {
+	public void parse(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
+		
+		if(EXI4JSONConstants.XML_SCHEMA_FOR_JSON.equals(schemaId)) {
+			parseV1(isEXI4JSON, osJSON);
+		} else {
+			parseV2(isEXI4JSON, osJSON);
+		}
+	}
+	
+	private void parseV1(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
 		EXIStreamDecoder streamDecoder = ef.createEXIStreamDecoder();
 		
-		EXIBodyDecoder bodyDecoder = streamDecoder.decodeHeader(is);
+		EXIBodyDecoder bodyDecoder = streamDecoder.decodeHeader(isEXI4JSON);
 		
-		JsonGenerator generator = Json.createGenerator(new OutputStreamWriter(os));
+		JsonGenerator generator = Json.createGenerator(new OutputStreamWriter(osJSON));
 		
 		EventType next;
 	
@@ -215,7 +224,105 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 			}
 		}
 		
+		generator.flush();
+	}
+	
+	
+	private void parseV2(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
+		EXIStreamDecoder streamDecoder = ef.createEXIStreamDecoder();
+		
+		EXIBodyDecoder bodyDecoder = streamDecoder.decodeHeader(isEXI4JSON);
+		
+		JsonGenerator generator = Json.createGenerator(new OutputStreamWriter(osJSON));
+		
+		EventType next;
+	
+		while((next = bodyDecoder.next()) != null) {
+			switch(next) {
+			case START_DOCUMENT:
+				bodyDecoder.decodeStartDocument();
+				break;
+			case END_DOCUMENT:
+				bodyDecoder.decodeEndDocument();
+				break;
+			case ATTRIBUTE:
+				QNameContext qncAT = bodyDecoder.decodeAttribute();
+				if(!EXI4JSONConstants.LOCALNAME_KEY.equals(qncAT.getLocalName())) {
+					throw new RuntimeException("Not supported EXI attribute: " + qncAT);
+				}
+				Value avalue = bodyDecoder.getAttributeValue();
+				key = avalue.toString();
+//				checkPendingEvent(generator, jsonEvent, value.toString());
+				break;
+			case CHARACTERS:
+				value = bodyDecoder.decodeCharacters();
+				checkPendingEvent(generator);
+				break;
+			case START_ELEMENT_NS:
+				// key element
+				key = bodyDecoder.decodeStartElement().getLocalName();
+				break;
+			case START_ELEMENT:
+			case START_ELEMENT_GENERIC:
+			case START_ELEMENT_GENERIC_UNDECLARED:
+				QNameContext qncSE = bodyDecoder.decodeStartElement();
+//				checkPendingEvent(generator);
+				if(EXI4JSONConstants.LOCALNAME_MAP.equals(qncSE.getLocalName())) {
+					if(key == null) {
+						generator.writeStartObject();
+					} else {
+						generator.writeStartObject(key);
+						key = null;
+					}
+				} else if(EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncSE.getLocalName())) {
+					if(key == null) {
+						generator.writeStartArray();
+					} else {
+						generator.writeStartArray(key);
+						key = null;
+					}
+				} else if(EXI4JSONConstants.LOCALNAME_STRING.equals(qncSE.getLocalName())) {
+					// wait for value
+					jsonEvent = Event.VALUE_STRING;
+				} else if(EXI4JSONConstants.LOCALNAME_NUMBER.equals(qncSE.getLocalName())) {
+					// wait for value
+					jsonEvent = Event.VALUE_NUMBER;
+				} else if(EXI4JSONConstants.LOCALNAME_BOOLEAN.equals(qncSE.getLocalName())) {
+					// wait for value
+					jsonEvent = Event.VALUE_FALSE;
+				} else if(EXI4JSONConstants.LOCALNAME_NULL.equals(qncSE.getLocalName())) {
+					generator.writeNull();
+				} else if(EXI4JSONConstants.LOCALNAME_OTHER.equals(qncSE.getLocalName())) {
+					// TODO other element
+					throw new RuntimeException("'other' element not yet supported!");
+				} else {
+					// key element
+					key = bodyDecoder.decodeStartElement().getLocalName();
+				}
+				break;
+			case END_ELEMENT:
+				QNameContext qncEE = bodyDecoder.decodeEndElement();
+//				checkPendingEvent(generator);
+				if(EXI4JSONConstants.LOCALNAME_MAP.equals(qncEE.getLocalName())) {
+					generator.writeEnd();
+				} else if(EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncEE.getLocalName())) {
+					generator.writeEnd();
+				}
+				break;
+			default:
+				throw new RuntimeException("Not supported EXI event: " + next);
+			}
+		}
 		
 		generator.flush();
 	}
+	
+//	public static void main(String[] args) throws EXIException, IOException {
+//		if(args.length == 1) {
+//			EXIforJSONParser e4jParser = new EXIforJSONParser();
+//			ByteArrayOutputStream osJSON = new ByteArrayOutputStream();
+//			e4jParser.parse(new FileInputStream("C:\\Users\\mchn4310\\AppData\\Local\\Temp\\exi4json4302776206135352859exi"), osJSON);
+//			System.out.println(new String(osJSON.toByteArray()));
+//		}
+//	}
 }
