@@ -320,14 +320,44 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 	}
 	
 	protected String unescapeKey(String key) {
+		StringBuilder sb = null;
+		
 		// conflicting names
 		if(key.length() > 2 && key.charAt(0) == EXI4JSONConstants.ESCAPE_START_CHARACTER && key.charAt(1) == EXI4JSONConstants.ESCAPE_END_CHARACTER) {
 			key = key.substring(2);
+		} else {
+			// check whether there is an escape character
+			int i = 0;
+			while(i < key.length()) {
+				char c = key.charAt(i);
+				if(c == EXI4JSONConstants.ESCAPE_START_CHARACTER) {
+					int endIndex = key.indexOf(EXI4JSONConstants.ESCAPE_END_CHARACTER, i);
+					if(endIndex <= 0) {
+						throw new RuntimeException("Unexpected Escape Key: " + key);
+					} else {
+						int cp = Integer.parseInt(key.substring(i+1, endIndex));
+						if(sb == null)  {
+							sb = new StringBuilder();
+							sb.append(key, 0, i);
+						}
+						sb.appendCodePoint(cp);
+						i += (endIndex-i);
+					}
+				} else {
+					// ok
+					if(sb != null) {
+						sb.append(c);
+					}
+				}
+				i++;
+			}
 		}
-		// TODO represent '_' itself
-		// TODO Conflict with NCName character(s)
 		
-		return key;
+		if(sb == null)  {
+			return key;
+		} else {
+			return sb.toString();
+		}
 	}
 	
 //	public static void main(String[] args) throws EXIException, IOException {

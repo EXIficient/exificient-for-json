@@ -387,6 +387,8 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 			// --> Conflict with existing EXI4JSON global schema element name
 			key = String.valueOf(EXI4JSONConstants.ESCAPE_START_CHARACTER)
 					+ String.valueOf(EXI4JSONConstants.ESCAPE_END_CHARACTER) + key;
+		} else {
+			key = escapeNCNamePlus(key);
 		}
 
 		// TODO represent '_' itself
@@ -421,24 +423,61 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 				// first character (special)
 				if (isLetter(c)) {
 					// OK
+					if (sb != null) {
+						sb.append(c);
+					}
 				} else if (c == '_') {
-					// valid NCName, but needs to be escaped for EXI4JSON
-					
-				} else {
+					// NOT OK: valid NCName, but needs to be escaped for EXI4JSON
 					if (sb == null) {
 						sb = new StringBuilder();
 					}
+					sb.append("_95.");
+				} else {
+					// NOT OK
+					if (sb == null) {
+						sb = new StringBuilder();
+					}
+					sb.append(EXI4JSONConstants.ESCAPE_START_CHARACTER);
+					// Is this a UTF-16 surrogate pair?
+					if (Character.isHighSurrogate(c)) {
+						// use code-point and increment loop count (2 char's)
+						sb.append((int)name.codePointAt(i++));
+					} else {
+						sb.append((int)c);
+					}
+					sb.append(EXI4JSONConstants.ESCAPE_END_CHARACTER);
 				}
 			} else {
 				// rest of the characters
-				
 				if (isNCNameChar(c)) {
-					// OK
 					if(c == '_') {
-						// update
+						// NOT OK: valid NCName, but needs to be escaped for EXI4JSON
+						if (sb == null) {
+							sb = new StringBuilder();
+							sb.append(name, 0, i);
+						}
+						sb.append("_95.");
+					} else {
+						// OK
+						if (sb != null) {
+							sb.append(c);
+						}
 					}
 				} else {
 					// Not OK, fix
+					if (sb == null) {
+						sb = new StringBuilder();
+						sb.append(name, 0, i);
+					}
+					sb.append(EXI4JSONConstants.ESCAPE_START_CHARACTER);
+					// Is this a UTF-16 surrogate pair?
+					if (Character.isHighSurrogate(c)) {
+						// use code-point and increment loop count (2 char's)
+						sb.append((int)name.codePointAt(i++));
+					} else {
+						sb.append((int)c);
+					}
+					sb.append(EXI4JSONConstants.ESCAPE_END_CHARACTER);
 				}
 			}
 		}

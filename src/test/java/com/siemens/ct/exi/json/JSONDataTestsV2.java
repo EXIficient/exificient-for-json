@@ -73,13 +73,14 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 		String key = EXI4JSONConstants.LOCALNAME_NUMBER; // "number"
 		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
 		String ekey = e4jGenerator.escapeKey(key);
-		
+
 		assertFalse(key.equals(ekey));
-		assertTrue((String.valueOf(EXI4JSONConstants.ESCAPE_START_CHARACTER)+String.valueOf(EXI4JSONConstants.ESCAPE_END_CHARACTER)+EXI4JSONConstants.LOCALNAME_NUMBER).equals(ekey));
-		
+		assertTrue((String.valueOf(EXI4JSONConstants.ESCAPE_START_CHARACTER)
+				+ String.valueOf(EXI4JSONConstants.ESCAPE_END_CHARACTER) + EXI4JSONConstants.LOCALNAME_NUMBER)
+						.equals(ekey));
+
 		EXIforJSONParser e4jParser = new EXIforJSONParser();
 		String ukey = e4jParser.unescapeKey(ekey);
-		
 		assertTrue(ukey.equals(key));
 	}
 
@@ -91,8 +92,10 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 
 		assertFalse(key.equals(ekey));
 		assertTrue("a_32.number".equals(ekey));
-		
-		// TODO 
+
+		EXIforJSONParser e4jParser = new EXIforJSONParser();
+		String ukey = e4jParser.unescapeKey(ekey);
+		assertTrue(ukey.equals(key));
 	}
 
 	@Test
@@ -103,8 +106,12 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 
 		assertFalse(key.equals(ekey));
 		assertTrue("_95.foo".equals(ekey));
+
+		EXIforJSONParser e4jParser = new EXIforJSONParser();
+		String ukey = e4jParser.unescapeKey(ekey);
+		assertTrue(ukey.equals(key));
 	}
-	
+
 	@Test
 	public void testEscapeKey4() throws EXIException, IOException, JSONException {
 		String key = "foo_.A";
@@ -113,6 +120,32 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 
 		assertFalse(key.equals(ekey));
 		assertTrue("foo_95..A".equals(ekey));
+
+		EXIforJSONParser e4jParser = new EXIforJSONParser();
+		String ukey = e4jParser.unescapeKey(ekey);
+		assertTrue(ukey.equals(key));
+	}
+
+	@Test
+	public void testEscapeKey5() throws EXIException, IOException, JSONException {
+		// High surrogate pair
+		byte[] data = { 0, 0x41, // A
+				(byte) 0xD8, 1, // High surrogate
+				(byte) 0xDC, 2, // Low surrogate
+				0, 0x42, // B
+		};
+
+		String key = new String(data, "UTF-16");
+
+		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = e4jGenerator.escapeKey(key);
+
+		assertFalse(key.equals(ekey));
+		assertTrue("A_66562.B".equals(ekey));
+
+		EXIforJSONParser e4jParser = new EXIforJSONParser();
+		String ukey = e4jParser.unescapeKey(ekey);
+		assertTrue(ukey.equals(key));
 	}
 
 }
