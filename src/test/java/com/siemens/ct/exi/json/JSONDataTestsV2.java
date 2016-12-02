@@ -10,6 +10,7 @@ import org.json.JSONException;
 import org.junit.Test;
 import org.skyscreamer.jsonassert.JSONAssert;
 
+import com.siemens.ct.exi.CodingMode;
 import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.exceptions.EXIException;
 import com.siemens.ct.exi.helpers.DefaultEXIFactory;
@@ -146,6 +147,17 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 		EXIforJSONParser e4jParser = new EXIforJSONParser();
 		String ukey = e4jParser.unescapeKey(ekey);
 		assertTrue(ukey.equals(key));
+	}
+	
+	public static void main(String[] args) throws EXIException, IOException {
+		String json = "{\"keyNumber\": 123}";
+		EXIFactory ef = DefaultEXIFactory.newInstance();
+		ef.setCodingMode(CodingMode.BYTE_PACKED);
+		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator(ef);
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		e4jGenerator.generate(new ByteArrayInputStream(json.getBytes()), baos);
+		System.out.println(baos.size());
+		
 	}
 
 }

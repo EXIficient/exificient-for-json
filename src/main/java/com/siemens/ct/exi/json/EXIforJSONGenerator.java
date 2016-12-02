@@ -411,7 +411,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 	// --> escapes also '_' for EXI4JSON
 	public static String escapeNCNamePlus(String name) {
 		if (name == null || name.length() == 0) {
-			throw new RuntimeException("Unsupoorted NCName: " + name);
+			throw new RuntimeException("Unsupported NCName: " + name);
 		}
 
 		StringBuilder sb = null;
