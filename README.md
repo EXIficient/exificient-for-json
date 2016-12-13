@@ -6,7 +6,7 @@ EXI for JSON - How EXI can be used to represent JSON data efficiently (see <http
 
 ### Compression
 
-See test-data in https://github.com/EXIficient/exificient-for-json/tree/master/data.
+See test-data in https://github.com/EXIficient/exificient-for-json/tree/master/src/test/resources.
 
 | TestCase                                              |       JSON |      CBOR |  EXI4JSON |
 |-------------------------------------------------------|-----------:|----------:|----------:|
