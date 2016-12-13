@@ -1,0 +1,61 @@
+[
+  '{{repeat(100, 100)}}',
+  {
+    _id: '{{objectId()}}',
+    index: '{{index()}}',
+    guid: '{{guid()}}',
+    isActive: '{{bool()}}',
+    balance: '{{floating(1000, 4000000, 2)}}',
+    age: '{{integer(20, 99)}}',
+    eyeColor: '{{random("blue", "brown", "green")}}',
+    name: {
+      first: '{{firstName()}}',
+      last: '{{surname()}}'
+    },
+    company: '{{company().toUpperCase()}}',
+    email: function (tags) {
+      // Email tag is deprecated, because now you can produce an email as simple as this:
+      return (this.name.first + '.' + this.name.last + '@' + this.company + tags.domainZone()).toLowerCase();
+    },
+    phone: '+1 {{phone()}}',
+    address: [
+      '{{repeat(1, 3)}}',
+      {
+        street: {
+          number: '{{integer(100, 9999)}}',
+          name: '{{street()}}'
+        },
+        city: '{{city()}}',
+        state: '{{state()}}',
+        zip: '{{integer(100, 10000)}}'
+      }
+    ],
+    picture: function (tags) {
+      return ('http:' + this.company + tags.domainZone() + '/' + this.name.first + '.' + this.name.last + '/32x32').toLowerCase(); 
+    },
+    registered: '{{moment(this.date(new Date(2001, 0, 1), new Date())).format("YYYY:MM:DDThh:mm:ss")}}',
+    latitude: '{{floating(-90.000001, 90)}}',
+    longitude: '{{floating(-180.000001, 180)}}',
+    tags: [
+      '{{repeat(7)}}',
+      '{{lorem(1, "words")}}'
+    ],
+    range: [
+      '{{repeat(10)}}',
+      '{{integer(0,99)}}'
+    ],
+
+
+    friends: [
+      '{{repeat(3)}}',
+      {
+        id: '{{index()}}',
+        name: '{{firstName()}} {{surname()}}'
+      }
+    ],
+    favoriteFruit: function (tags) {
+      var fruits = ['apple', 'banana', 'strawberry'];
+      return fruits[tags.integer(0, fruits.length - 1)];
+    }
+  }
+]

@@ -83,6 +83,13 @@
 			<version>1.2.3</version>
 			<scope>test</scope>
 		</dependency>
+		<!-- CBOR comparisons -->
+		<dependency>
+		  <groupId>com.fasterxml.jackson.dataformat</groupId>
+		  <artifactId>jackson-dataformat-cbor</artifactId>
+		  <version>2.7.4</version>
+		  <scope>test</scope>
+		</dependency>
 	</dependencies>
 	
 	<parent>
