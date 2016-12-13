@@ -8,7 +8,7 @@ EXI for JSON - How EXI can be used to represent JSON data efficiently (see <http
 
 See test-data in https://github.com/EXIficient/exificient-for-json/tree/master/src/test/resources.
 
-| TestCase                                              |       JSON |      CBOR |  EXI4JSON |
+| TestCase                                              |       JSON [Size in Bytes] |      CBOR [Size in Bytes] |  EXI4JSON [Size in Bytes] |
 |-------------------------------------------------------|-----------:|----------:|----------:|
 | glossary.json                                         |        605 |       311 |       322 |
 | gpx\sample-set-1\gpx-1-100pts.json                    |     11.007 |     7.378 |     6.210 |
