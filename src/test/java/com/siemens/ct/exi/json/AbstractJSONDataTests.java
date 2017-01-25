@@ -37,25 +37,172 @@ public abstract class AbstractJSONDataTests extends TestCase {
 	// Samples/brightnessProximitySensor.jsonld";
 	// _test(readFile(path));
 	// }
+	
+	// URL url = new URL("https://raw.githubusercontent.com/w3c/wot/master/TF-TD/TD%20Samples/car.jsonld");
+	String sCar = "{\r\n" + 
+			"    \"@context\": \"http://w3c.github.io/wot/w3c-wot-td-context.jsonld\",\r\n" + 
+			"    \"metadata\": {\r\n" + 
+			"        \"name\": \"MyCar\",\r\n" + 
+			"        \"protocols\" : {\r\n" + 
+			"            \"HTTP\" : {\r\n" + 
+			"                \"uri\" : \"http://100.64.24.55:3000/api/\",\r\n" + 
+			"                \"priority\" : 1\r\n" + 
+			"            }\r\n" + 
+			"        },\r\n" + 
+			"        \"encodings\": [\r\n" + 
+			"            \"JSON\"\r\n" + 
+			"        ]\r\n" + 
+			"    },\r\n" + 
+			"    \"interactions\": [\r\n" + 
+			"        {\r\n" + 
+			"            \"@type\": \"Property\",\r\n" + 
+			"            \"name\": \"vehicleSpeed\",\r\n" + 
+			"            \"outputData\": \"xsd:unsignedShort\",\r\n" + 
+			"            \"writable\": false\r\n" + 
+			"        }\r\n" + 
+			"    ]\r\n" + 
+			"}";
 
 	@Test
 	public void testCar() throws EXIException, IOException, JSONException {
-		URL url = new URL("https://raw.githubusercontent.com/w3c/wot/master/TF-TD/TD%20Samples/car.jsonld");
-		_test(readURL(url));
-		_test(readURL(url), sharedStrings);
+		_test(sCar);
+		_test(sCar, sharedStrings);
 	}
 
+	
+	// URL url = new URL("https://raw.githubusercontent.com/w3c/wot/master/TF-TD/TD%20Samples/outlet.jsonld");
+	String sOutlet = "{\r\n" + 
+			"  \"@context\": \"http://w3c.github.io/wot/w3c-wot-td-context.jsonld\",\r\n" + 
+			"  \"metadata\": {\r\n" + 
+			"    \"name\": \"MyOutlet\",\r\n" + 
+			"    \"protocols\" : {\r\n" + 
+			"      \"WS\" : {\r\n" + 
+			"        \"uri\" : \"ws://www.example.com:80/outlet\",\r\n" + 
+			"        \"priority\" : 1\r\n" + 
+			"      },\r\n" + 
+			"      \"HTTP\" : {\r\n" + 
+			"        \"uri\" : \"http://www.example.com:80/outlet\",\r\n" + 
+			"        \"priority\" : 2\r\n" + 
+			"      }\r\n" + 
+			"    },\r\n" + 
+			"    \"encodings\": [\r\n" + 
+			"      \"JSON\"\r\n" + 
+			"    ]\r\n" + 
+			"  },\r\n" + 
+			"  \"interactions\": [\r\n" + 
+			"    {\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"powerStateOn\",\r\n" + 
+			"      \"outputData\": \"xsd:boolean\",\r\n" + 
+			"      \"writable\": true\r\n" + 
+			"    },{\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"outletInUse\",\r\n" + 
+			"      \"outputData\": \"xsd:boolean\",\r\n" + 
+			"      \"writable\": false\r\n" + 
+			"    },{\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"powerConsumption\",\r\n" + 
+			"      \"outputData\": \"xsd:float\",\r\n" + 
+			"      \"writable\": false\r\n" + 
+			"    },{\r\n" + 
+			"      \"@type\": \"Event\",\r\n" + 
+			"      \"outputData\": \"xsd:boolean\",\r\n" + 
+			"      \"name\": \"powerStateChanged\"\r\n" + 
+			"    },{\r\n" + 
+			"      \"@type\": \"Event\",\r\n" + 
+			"      \"outputData\": \"xsd:boolean\",\r\n" + 
+			"      \"name\": \"outletUsageChanged\"\r\n" + 
+			"    },{\r\n" + 
+			"      \"@type\": \"Event\",\r\n" + 
+			"      \"outputData\": \"xsd:float\",\r\n" + 
+			"      \"name\": \"powerConsumptionChanged\"\r\n" + 
+			"    }\r\n" + 
+			"  ]\r\n" + 
+			"}";
+	
 	@Test
 	public void testOutlet() throws EXIException, IOException, JSONException {
-		URL url = new URL("https://raw.githubusercontent.com/w3c/wot/master/TF-TD/TD%20Samples/outlet.jsonld");
-		_test(readURL(url));
+		_test(sOutlet);
 	}
 
+	// URL url = new URL("https://raw.githubusercontent.com/w3c/wot/master/TF-TD/TD%20Samples/fancy_led.jsonld");
+	String sFancyLed = "{\r\n" + 
+			"  \"@context\": \"http://w3c.github.io/wot/w3c-wot-td-context.jsonld\",\r\n" + 
+			"  \"metadata\": {\r\n" + 
+			"    \"name\": \"MyLED\",\r\n" + 
+			"    \"protocols\" : {\r\n" + 
+			"      \"CoAP\" : {\r\n" + 
+			"        \"uri\" : \"coap://192.168.1.123:5683/things/MyLED\",\r\n" + 
+			"        \"priority\" : 1\r\n" + 
+			"		  },\r\n" + 
+			"      \"HTTP\" : {\r\n" + 
+			"        \"uri\" : \"http://192.168.1.123:8080/things/MyLED\",\r\n" + 
+			"        \"priority\" : 2\r\n" + 
+			"      }\r\n" + 
+			"	  },\r\n" + 
+			"    \"encodings\": [\r\n" + 
+			"      \"JSON\"\r\n" + 
+			"    ]\r\n" + 
+			"  },\r\n" + 
+			"  \"interactions\": [\r\n" + 
+			"     {\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"brightness\",\r\n" + 
+			"      \"outputData\": \"xsd:unsignedByte\",\r\n" + 
+			"      \"writable\": true\r\n" + 
+			"     }, {\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"colorTemperature\",\r\n" + 
+			"      \"outputData\": \"xsd:unsignedShort\",\r\n" + 
+			"      \"writable\": true\r\n" + 
+			"    }, {\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"rgbValueRed\",\r\n" + 
+			"      \"outputData\": \"xsd:unsignedByte\",\r\n" + 
+			"      \"writable\": true\r\n" + 
+			"    }, {\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"rgbValueGreen\",\r\n" + 
+			"      \"outputData\": \"xsd:unsignedByte\",\r\n" + 
+			"      \"writable\": true\r\n" + 
+			"    }, {\r\n" + 
+			"      \"@type\": \"Property\",\r\n" + 
+			"      \"name\": \"rgbValueBlue\",\r\n" + 
+			"      \"outputData\": \"xsd:unsignedByte\",\r\n" + 
+			"      \"writable\": true\r\n" + 
+			"    }, {\r\n" + 
+			"      \"@type\": \"Action\",\r\n" + 
+			"      \"name\": \"ledOnOff\",\r\n" + 
+			"      \"inputData\": \"xsd:boolean\",\r\n" + 
+			"      \"outputData\": \"\"\r\n" + 
+			"    }, {\r\n" + 
+			"      \"@type\": \"Action\",\r\n" + 
+			"      \"name\": \"fadeIn\",\r\n" + 
+			"      \"inputData\": \"xsd:unsignedByte\",\r\n" + 
+			"      \"outputData\": \"\"\r\n" + 
+			"    },  {\r\n" + 
+			"      \"@type\": \"Action\",\r\n" + 
+			"      \"name\": \"fadeOut\",\r\n" + 
+			"      \"inputData\": \"xsd:unsignedByte\",\r\n" + 
+			"      \"outputData\": \"\"\r\n" + 
+			"    },  {\r\n" + 
+			"      \"@type\": \"Action\",\r\n" + 
+			"      \"name\": \"trafficLight\",\r\n" + 
+			"      \"inputData\": \"xsd:boolean\",\r\n" + 
+			"      \"outputData\": \"\"\r\n" + 
+			"    }, {\r\n" + 
+			"      \"@type\": \"Event\",\r\n" + 
+			"      \"outputData\": \"xsd:unsignedShort\",\r\n" + 
+			"      \"name\": \"colorTemperatureChanged\"\r\n" + 
+			"    }\r\n" + 
+			"  ]\r\n" + 
+			"}";
+	
 	@Test
 	public void testFancyLed() throws EXIException, IOException, JSONException {
-		URL url = new URL("https://raw.githubusercontent.com/w3c/wot/master/TF-TD/TD%20Samples/fancy_led.jsonld");
-		_test(readURL(url));
-		_test(readURL(url), sharedStrings);
+		_test(sFancyLed);
+		_test(sFancyLed, sharedStrings);
 	}
 
 	@Test
