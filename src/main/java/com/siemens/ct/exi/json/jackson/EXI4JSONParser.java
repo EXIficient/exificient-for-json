@@ -15,20 +15,26 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.base.ParserMinimalBase;
 import com.fasterxml.jackson.core.io.IOContext;
+import com.siemens.ct.exi.exceptions.EXIException;
+import com.siemens.ct.exi.json.EXIforJSONParser;
 
 public class EXI4JSONParser extends ParserMinimalBase  {
+	
+	EXIforJSONParser e4j;
 	
 	InputStream in;
 	
 	IOContext ctxt;
 	
-	
-	public EXI4JSONParser(InputStream in, IOContext ctxt) {
+	public EXI4JSONParser(InputStream in, IOContext ctxt) throws EXIException, IOException {
 		this.in = in;
 		this.ctxt = ctxt;
+		
+		e4j = new EXIforJSONParser();
+		// TODO set input stream
 	}
 	
-	public EXI4JSONParser(byte[] data, int offset, int len, IOContext ctxt) {
+	public EXI4JSONParser(byte[] data, int offset, int len, IOContext ctxt) throws EXIException, IOException {
 		this(new ByteArrayInputStream(data, offset, len), ctxt);
 	}
 	
@@ -104,6 +110,7 @@ public class EXI4JSONParser extends ParserMinimalBase  {
 	@Override
 	public JsonToken nextToken() throws IOException {
 		// TODO Auto-generated method stub
+		// return e4j.parse(isEXI4JSON, osJSON);;
 		return null;
 	}
 

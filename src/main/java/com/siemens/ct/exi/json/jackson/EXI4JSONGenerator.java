@@ -24,6 +24,8 @@ public class EXI4JSONGenerator extends GeneratorBase {
 	
 	IOContext ctxt;
 	
+	private static final boolean DEBUG = false;
+	
 	public EXI4JSONGenerator(int features, ObjectCodec codec) throws EXIException, IOException {
 		super(features, codec);
 		e4j = new EXIforJSONGenerator();
@@ -47,13 +49,15 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	protected void _verifyValueWrite(String typeMsg) throws IOException {
-		// TODO Auto-generated method stub
-		
+		// TODO Not sure when this method is called (what is the intent)
+		System.err.println("_verifyValueWrite: " + typeMsg);
 	}
 
 	@Override
 	public void flush() throws IOException {
-		System.out.println("flush()");
+		if(DEBUG) {
+			System.out.println("flush()");
+		}
 		try {
 			e4j.writeEndDocument();
 		} catch (EXIException e) {
@@ -63,13 +67,15 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeBinary(Base64Variant bv, byte[] data, int offset, int len) throws IOException {
-		// TODO Auto-generated method stub
-		
+		// TODO not sure what binary in this context is
+		throw new IOException("No support for Binary yet");
 	}
 
 	@Override
 	public void writeBoolean(boolean state) throws IOException {
-		System.out.println("writeBoolean(" + state + ")");
+		if(DEBUG) {
+			System.out.println("writeBoolean(" + state + ")");
+		}
 		try {
 			e4j.writeBoolean(state);
 		} catch (EXIException e) {
@@ -79,7 +85,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeEndArray() throws IOException {
-		System.out.println("writeEndArray()");
+		if(DEBUG) {
+			System.out.println("writeEndArray()");
+		}
 		try {
 			e4j.writeEndArray();
 		} catch (EXIException e) {
@@ -89,7 +97,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeEndObject() throws IOException {
-		System.out.println("writeEndObject()");
+		if(DEBUG) {
+			System.out.println("writeEndObject()");
+		}
 		try {
 			e4j.writeEndObject();
 		} catch (EXIException e) {
@@ -99,7 +109,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeFieldName(String name) throws IOException {
-		System.out.println("writeFieldName(" + name + ")");
+		if(DEBUG) {
+			System.out.println("writeFieldName(" + name + ")");
+		}
 		try {
 			e4j.writeKeyName(name);
 		} catch (EXIException e) {
@@ -109,7 +121,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNull() throws IOException {
-		System.out.println("writeNull()");
+		if(DEBUG) {
+			System.out.println("writeNull()");
+		}
 		try {
 			e4j.writeNull();
 		} catch (EXIException e) {
@@ -119,7 +133,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNumber(int v) throws IOException {
-		System.out.println("writeNumber(" + v + ")");
+		if(DEBUG) {
+			System.out.println("writeNumber(" + v + ")");
+		}
 		try {
 			e4j.writeNumber(v);
 		} catch (EXIException e) {
@@ -129,7 +145,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNumber(long v) throws IOException {
-		System.out.println("writeNumber(" + v + ")");
+		if(DEBUG) {
+			System.out.println("writeNumber(" + v + ")");
+		}
 		try {
 			e4j.writeNumber(v);
 		} catch (EXIException e) {
@@ -139,7 +157,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNumber(BigInteger v) throws IOException {
-		System.out.println("writeNumber(" + v + ")");
+		if(DEBUG) {
+			System.out.println("writeNumber(" + v + ")");
+		}
 		try {
 			e4j.writeNumber(v);
 		} catch (EXIException e) {
@@ -149,7 +169,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNumber(double v) throws IOException {
-		System.out.println("writeNumber(" + v + ")");
+		if(DEBUG) {
+			System.out.println("writeNumber(" + v + ")");
+		}
 		try {
 			e4j.writeNumber(v);
 		} catch (EXIException e) {
@@ -159,7 +181,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNumber(float v) throws IOException {
-		System.out.println("writeNumber(" + v + ")");
+		if(DEBUG) {
+			System.out.println("writeNumber(" + v + ")");
+		}
 		try {
 			e4j.writeNumber(v);
 		} catch (EXIException e) {
@@ -169,7 +193,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNumber(BigDecimal v) throws IOException {
-		System.out.println("writeNumber(" + v + ")");
+		if(DEBUG) {
+			System.out.println("writeNumber(" + v + ")");
+		}
 		try {
 			e4j.writeNumber(v);
 		} catch (EXIException e) {
@@ -179,7 +205,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeNumber(String encodedValue) throws IOException {
-		System.out.println("writeNumber(" + encodedValue + ")");
+		if(DEBUG) {
+			System.out.println("writeNumber(" + encodedValue + ")");
+		}
 		try {
 			e4j.writeNumber(encodedValue);
 		} catch (EXIException e) {
@@ -217,7 +245,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeStartArray() throws IOException {
-		System.out.println("writeStartArray()");
+		if(DEBUG) {
+			System.out.println("writeStartArray()");
+		}
 		try {
 			e4j.writeStartArray();
 		} catch (EXIException e) {
@@ -227,7 +257,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeStartObject() throws IOException {
-		System.out.println("writeStartObject()");
+		if(DEBUG) {
+			System.out.println("writeStartObject()");
+		}
 		try {
 			e4j.writeStartObject();
 		} catch (EXIException e) {
@@ -237,7 +269,9 @@ public class EXI4JSONGenerator extends GeneratorBase {
 
 	@Override
 	public void writeString(String text) throws IOException {
-		System.out.println("writeString(" + text + ")");
+		if(DEBUG) {
+			System.out.println("writeString(" + text + ")");
+		}
 		try {
 			e4j.writeString(text);
 		} catch (EXIException e) {
@@ -276,6 +310,11 @@ public class EXI4JSONGenerator extends GeneratorBase {
 		    mapperEXI.writeTree(fEXI.createGenerator(baos), car);
 		    
 		    System.out.println("# EXI4JSON Bytes: " + baos.size());
+		    
+		    // read bytes again 
+		    EXI4JSONParser eparser = fEXI.createParser(baos.toByteArray());
+		    JsonNode car2 = mapperJSON.readTree(eparser);
+		    System.out.println("car2 = " + car2);
 		    
 //		    System.out.println("car.brand = " + car.brand);
 //		    System.out.println("car.doors = " + car.doors);

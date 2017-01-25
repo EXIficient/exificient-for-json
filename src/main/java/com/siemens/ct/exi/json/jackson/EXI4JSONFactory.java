@@ -101,7 +101,11 @@ public class EXI4JSONFactory extends JsonFactory {
 	 */
 	@Override
 	protected EXI4JSONParser _createParser(InputStream in, IOContext ctxt) throws IOException {
-		return new EXI4JSONParser(in, ctxt);
+		try {
+			return new EXI4JSONParser(in, ctxt);
+		} catch (EXIException e) {
+			throw new IOException(e);
+		}
 	}
 
 	/**
@@ -123,7 +127,11 @@ public class EXI4JSONFactory extends JsonFactory {
 	 */
 	@Override
 	protected EXI4JSONParser _createParser(byte[] data, int offset, int len, IOContext ctxt) throws IOException {
-		return new EXI4JSONParser(data, offset, len, ctxt);
+		try {
+			return new EXI4JSONParser(data, offset, len, ctxt);
+		} catch (EXIException e) {
+			throw new IOException(e);
+		}
 	}
 
 	@Override
