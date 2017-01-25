@@ -33,6 +33,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.PrintStream;
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
@@ -45,9 +47,20 @@ import com.siemens.ct.exi.EXIBodyEncoder;
 import com.siemens.ct.exi.EXIFactory;
 import com.siemens.ct.exi.EXIStreamEncoder;
 import com.siemens.ct.exi.exceptions.EXIException;
+import com.siemens.ct.exi.values.BooleanValue;
+import com.siemens.ct.exi.values.FloatValue;
+import com.siemens.ct.exi.values.IntegerValue;
 import com.siemens.ct.exi.values.StringValue;
+import com.siemens.ct.exi.values.Value;
 
 public class EXIforJSONGenerator extends AbstractEXIforJSON {
+
+	OutputStream osEXI4JSON;
+
+	EXIBodyEncoder bodyEncoder;
+
+	List<Event> events;
+	List<String> keys;
 
 	public EXIforJSONGenerator() throws EXIException, IOException {
 		super();
@@ -91,83 +104,96 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 		}
 	}
 
-	public static void main(String[] args) throws FileNotFoundException, EXIException, IOException {
-		// TEST V2
-		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_one.json";
-		// String json = "./../../../W3C/EXI/docs/json/V2/personnel_three.json";
+	// public static void main(String[] args) throws FileNotFoundException,
+	// EXIException, IOException {
+	// // TEST V2
+	// // String json = "./../../../W3C/EXI/docs/json/V2/personnel_one.json";
+	// // String json = "./../../../W3C/EXI/docs/json/V2/personnel_three.json";
+	//
+	// if (false) {
+	// List<String> jsons = new ArrayList<String>();
+	// // Taki
+	// jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_one.json");
+	// jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_two.json");
+	// jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_three.json");
+	//
+	// // Some other samples
+	// jsons.add("./../../../W3C/EXI/docs/json/V2/test/bower.json");
+	// jsons.add("./../../../W3C/EXI/docs/json/V2/test/door.jsonld");
+	// jsons.add("./../../../W3C/EXI/docs/json/V2/test/package.json");
+	// jsons.add("./../../../W3C/EXI/docs/json/V2/test/ui.resizable.jquery.json");
+	//
+	// // "old" JSON tests
+	// // GPX
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-1pts.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-100pts.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-200pts.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-500pts.json");
+	// // JSON Generator
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/01.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/03.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/06.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/10.json");
+	// // OpenWheather
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1cities.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-100cities.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-200cities.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-300cities.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-400cities.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-500cities.json");
+	// jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1000cities.json");
+	//
+	// System.out.println("Name; JSON; V1; V2");
+	// for (String json : jsons) {
+	// test(json);
+	// }
+	// } else {
+	// // String s = "{\n \"keyNumber\": 123,\n \"keyArrayStrings\": [\n
+	// // \"s1\",\n \"s2\"\n ]\n}";
+	// String s = "{\n \"glossary\": {\n \"title\": \"example glossary\",\n
+	// \"GlossDiv\": {\n \"title\": \"S\",\n \"GlossList\": {\n \"GlossEntry\":
+	// {\n \"ID\": \"SGML\",\n \"SortAs\": \"SGML\",\n \"GlossTerm\": \"Standard
+	// Generalized Markup Language\",\n \"Acronym\": \"SGML\",\n \"Abbrev\":
+	// \"ISO 8879:1986\",\n \"GlossDef\": {\n \"para\": \"A meta-markup
+	// language, used to create markup languages such as DocBook.\",\n
+	// \"GlossSeeAlso\": [\n \"GML\",\n \"XML\"\n ]\n },\n \"GlossSee\":
+	// \"markup\"\n }\n }\n }\n }\n}";
+	// ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+	// EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+	// e4jGenerator.generate(new
+	// ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)), baosV2);
+	//
+	// File f = File.createTempFile("exi4json", "exi");
+	// FileOutputStream fos = new FileOutputStream(f);
+	// fos.write(baosV2.toByteArray());
+	// fos.close();
+	// System.out.println("EXI4JSON Written to " + f);
+	// }
+	//
+	// }
+	//
+	// private static void test(String json) throws FileNotFoundException,
+	// EXIException, IOException {
+	// ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
+	// {
+	// EXIforJSONGenerator e4jGenerator = new
+	// EXIforJSONGenerator(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
+	// e4jGenerator.generate(new FileInputStream(json), baosV1);
+	// // System.out.println("Size V1: " + baosV1.size());
+	// }
+	//
+	// ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
+	// {
+	// EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+	// e4jGenerator.generate(new FileInputStream(json), baosV2);
+	// // System.out.println("Size V2: " + baosV2.size());
+	// }
+	//
+	// System.out.println(json + "; " + (new File(json)).length() + "; " +
+	// baosV1.size() + "; " + baosV2.size());
+	// }
 
-		if (false) {
-			List<String> jsons = new ArrayList<String>();
-			// Taki
-			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_one.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_two.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/personnel_three.json");
-
-			// Some other samples
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/bower.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/door.jsonld");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/package.json");
-			jsons.add("./../../../W3C/EXI/docs/json/V2/test/ui.resizable.jquery.json");
-
-			// "old" JSON tests
-			// GPX
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-1pts.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-100pts.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-200pts.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/gpx/sample-set-1/gpx-1-500pts.json");
-			// JSON Generator
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/01.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/03.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/06.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/json-generator.com/2015-01-06/10.json");
-			// OpenWheather
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-100cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-200cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-300cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-400cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-500cities.json");
-			jsons.add("./../../../W3C/Group/EXI/TTFMS/data/JSON/openweathermap.org/sample-set-1/owm-1-1000cities.json");
-
-			System.out.println("Name; JSON; V1; V2");
-			for (String json : jsons) {
-				test(json);
-			}
-		} else {
-			// String s = "{\n \"keyNumber\": 123,\n \"keyArrayStrings\": [\n
-			// \"s1\",\n \"s2\"\n ]\n}";
-			String s = "{\n  \"glossary\": {\n    \"title\": \"example glossary\",\n    \"GlossDiv\": {\n      \"title\": \"S\",\n      \"GlossList\": {\n        \"GlossEntry\": {\n          \"ID\": \"SGML\",\n          \"SortAs\": \"SGML\",\n          \"GlossTerm\": \"Standard Generalized Markup Language\",\n          \"Acronym\": \"SGML\",\n          \"Abbrev\": \"ISO 8879:1986\",\n          \"GlossDef\": {\n            \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\n            \"GlossSeeAlso\": [\n              \"GML\",\n              \"XML\"\n            ]\n          },\n          \"GlossSee\": \"markup\"\n        }\n      }\n    }\n  }\n}";
-			ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
-			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-			e4jGenerator.generate(new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8)), baosV2);
-
-			File f = File.createTempFile("exi4json", "exi");
-			FileOutputStream fos = new FileOutputStream(f);
-			fos.write(baosV2.toByteArray());
-			fos.close();
-			System.out.println("EXI4JSON Written to " + f);
-		}
-
-	}
-
-	private static void test(String json) throws FileNotFoundException, EXIException, IOException {
-		ByteArrayOutputStream baosV1 = new ByteArrayOutputStream();
-		{
-			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator(EXI4JSONConstants.XML_SCHEMA_FOR_JSON);
-			e4jGenerator.generate(new FileInputStream(json), baosV1);
-			// System.out.println("Size V1: " + baosV1.size());
-		}
-
-		ByteArrayOutputStream baosV2 = new ByteArrayOutputStream();
-		{
-			EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-			e4jGenerator.generate(new FileInputStream(json), baosV2);
-			// System.out.println("Size V2: " + baosV2.size());
-		}
-
-		System.out.println(json + "; " + (new File(json)).length() + "; " + baosV1.size() + "; " + baosV2.size());
-	}
-
+	// NOTE: EXI4JSON Version is kept for testing purposes only!!
 	private void generateV1(InputStream isJSON, OutputStream osEXI4JSON) throws EXIException, IOException {
 		EXIStreamEncoder streamEncoder = ef.createEXIStreamEncoder();
 
@@ -282,99 +308,186 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 		bodyEncoder.flush();
 	}
 
-	protected void generateV2(InputStream isJSON, OutputStream osEXI4JSON) throws EXIException, IOException {
-		// DEBUG = System.out;
+	public void setOutputStream(OutputStream osEXI4JSON) {
+		this.osEXI4JSON = osEXI4JSON;
+	}
+
+	public void writeStartDocument() throws EXIException, IOException {
+		if (osEXI4JSON == null) {
+			throw new EXIException("No output stream set");
+		}
 
 		EXIStreamEncoder streamEncoder = ef.createEXIStreamEncoder();
-
-		EXIBodyEncoder bodyEncoder = streamEncoder.encodeHeader(osEXI4JSON);
-
-		JsonParser parser = Json.createParser(isJSON);
-
+		bodyEncoder = streamEncoder.encodeHeader(osEXI4JSON);
 		bodyEncoder.encodeStartDocument();
 
-		List<Event> events = new ArrayList<Event>();
-		List<String> keys = new ArrayList<String>();
+		if (events == null) {
+			events = new ArrayList<Event>();
+		} else {
+			events.clear();
+		}
+		if (keys == null) {
+			keys = new ArrayList<String>();
+		} else {
+			keys.clear();
+		}
+	}
+
+	public void writeEndDocument() throws EXIException, IOException {
+		bodyEncoder.encodeEndDocument();
+		bodyEncoder.flush();
+	}
+
+	public void writeKeyName(String key) throws EXIException, IOException {
+		events.add(Event.KEY_NAME);
+		key = escapeKey(key);
+		keys.add(key);
+		bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, key, null);
+		printDebug("<" + key + ">");
+	}
+
+	public void writeStartObject() throws EXIException, IOException {
+		events.add(Event.START_OBJECT);
+		bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_MAP, null);
+		printDebug("<j:map>");
+	}
+
+	public void writeEndObject() throws EXIException, IOException {
+		printDebug("</j:map>");
+		Event eo = events.remove(events.size() - 1);
+		assert (eo == Event.START_OBJECT);
+		bodyEncoder.encodeEndElement();
+		checkKeyEnd(events, keys, bodyEncoder);
+	}
+
+	public void writeStartArray() throws EXIException, IOException {
+		events.add(Event.START_ARRAY);
+		bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_ARRAY, null);
+		printDebug("<j:array>");
+	}
+
+	public void writeEndArray() throws EXIException, IOException {
+		printDebug("</j:array>");
+		Event ea = events.remove(events.size() - 1);
+		assert (ea == Event.START_ARRAY);
+		bodyEncoder.encodeEndElement();
+		checkKeyEnd(events, keys, bodyEncoder);
+	}
+
+	public void writeString(String s) throws EXIException, IOException {
+		bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_STRING, null);
+		bodyEncoder.encodeCharacters(new StringValue(s));
+		printDebug("<j:string>" + s + "</j:string>");
+		bodyEncoder.encodeEndElement();
+		checkKeyEnd(events, keys, bodyEncoder);
+	}
+
+	public void writeNumber(BigDecimal bd) throws EXIException, IOException {
+		// TODO do appropriate BigDecimal handling
+		writeNumber(bd.toString());
+	}
+	
+	public void writeNumber(String s) throws EXIException, IOException {
+		StringValue sv = new StringValue(s);
+		_writeNumber(sv);
+	}
+
+	private void _writeNumber(Value v) throws EXIException, IOException {
+		// TODO use /other/integer if it is an integer value
+		bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NUMBER, null);
+		bodyEncoder.encodeCharacters(v);
+		printDebug("<j:number>" + v + "</j:number>");
+		bodyEncoder.encodeEndElement();
+		checkKeyEnd(events, keys, bodyEncoder);
+	}
+	
+	public void writeNumber(double d) throws EXIException, IOException {
+		FloatValue fv = FloatValue.parse(d);
+		_writeNumber(fv);
+	}
+	
+	public void writeNumber(float f) throws EXIException, IOException {
+		FloatValue fv = FloatValue.parse(f);
+		_writeNumber(fv);
+	}
+	
+	public void writeNumber(BigInteger bi) throws EXIException, IOException {
+		IntegerValue biv = IntegerValue.valueOf(bi);
+		_writeNumber(biv);
+	}
+
+	public void writeNumber(long l) throws EXIException, IOException {
+		IntegerValue lv = IntegerValue.valueOf(l);
+		_writeNumber(lv);
+	}
+
+	public void writeNumber(int i) throws EXIException, IOException {
+		IntegerValue iv = IntegerValue.valueOf(i);
+		_writeNumber(iv);
+	}
+
+	public void writeBoolean(boolean b) throws EXIException, IOException {
+		bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_BOOLEAN, null);
+		BooleanValue bv = BooleanValue.getBooleanValue(b);
+		bodyEncoder.encodeCharacters(bv);
+		printDebug("<j:boolean>" + bv + "</j:boolean>");
+		bodyEncoder.encodeEndElement();
+		checkKeyEnd(events, keys, bodyEncoder);
+	}
+
+	public void writeNull() throws EXIException, IOException {
+		bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NULL, null);
+		printDebug("<j:null />");
+		bodyEncoder.encodeEndElement();
+		checkKeyEnd(events, keys, bodyEncoder);
+	}
+
+	protected void generateV2(InputStream isJSON, OutputStream osEXI4JSON) throws EXIException, IOException {
+		this.setOutputStream(osEXI4JSON);
+		this.writeStartDocument();
+
+		JsonParser parser = Json.createParser(isJSON);
 
 		while (parser.hasNext()) {
 			Event e = parser.next();
 
 			switch (e) {
 			case KEY_NAME:
-				events.add(e);
-				String key = parser.getString();
-				key = escapeKey(key);
-				keys.add(key);
-				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, key, null);
-				printDebug("<" + key + ">");
+				writeKeyName(parser.getString());
 				break;
 			case START_OBJECT:
-				events.add(e);
-				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_MAP,
-						null);
-				printDebug("<j:map>");
+				writeStartObject();
 				break;
 			case END_OBJECT:
-				printDebug("</j:map>");
-				Event eo = events.remove(events.size() - 1);
-				assert (eo == Event.START_OBJECT);
-				bodyEncoder.encodeEndElement();
-				checkKeyEnd(events, keys, bodyEncoder);
+				writeEndObject();
 				break;
 			case START_ARRAY:
-				events.add(e);
-				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_ARRAY,
-						null);
-				printDebug("<j:array>");
+				writeStartArray();
 				break;
 			case END_ARRAY:
-				printDebug("</j:array>");
-				Event ea = events.remove(events.size() - 1);
-				assert (ea == Event.START_ARRAY);
-				bodyEncoder.encodeEndElement();
-				checkKeyEnd(events, keys, bodyEncoder);
+				writeEndArray();
 				break;
 			case VALUE_STRING:
-				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_STRING,
-						null);
-				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
-				printDebug("<j:string>" + parser.getString() + "</j:string>");
-				bodyEncoder.encodeEndElement();
-				checkKeyEnd(events, keys, bodyEncoder);
+				writeString(parser.getString());
 				break;
 			case VALUE_NUMBER:
-				// TODO use /other/integer if it is an integer value
-				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NUMBER,
-						null);
-				bodyEncoder.encodeCharacters(new StringValue(parser.getString()));
-				printDebug("<j:number>" + parser.getString() + "</j:number>");
-				bodyEncoder.encodeEndElement();
-				checkKeyEnd(events, keys, bodyEncoder);
+				writeNumber(parser.getBigDecimal());
 				break;
 			case VALUE_FALSE:
+				writeBoolean(false);
+				break;
 			case VALUE_TRUE:
-				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON,
-						EXI4JSONConstants.LOCALNAME_BOOLEAN, null);
-				String sb = e == Event.VALUE_FALSE ? "false" : "true";
-				bodyEncoder.encodeCharacters(new StringValue(sb));
-				printDebug("<j:boolean>" + sb + "</j:boolean>");
-				bodyEncoder.encodeEndElement();
-				checkKeyEnd(events, keys, bodyEncoder);
+				writeBoolean(true);
 				break;
 			case VALUE_NULL:
-				bodyEncoder.encodeStartElement(EXI4JSONConstants.NAMESPACE_EXI4JSON, EXI4JSONConstants.LOCALNAME_NULL,
-						null);
-				printDebug("<j:null />");
-				bodyEncoder.encodeEndElement();
-				checkKeyEnd(events, keys, bodyEncoder);
+				writeNull();
 				break;
 			default:
 				throw new RuntimeException("Not supported JSON event: " + e);
 			}
 		}
 
-		bodyEncoder.encodeEndDocument();
-		bodyEncoder.flush();
+		writeEndDocument();
 	}
 
 	protected String escapeKey(String key) {
@@ -418,7 +531,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 
 		for (int i = 0; i < name.length(); i++) {
 			char c = name.charAt(i);
-			
+
 			if (i == 0) {
 				// first character (special)
 				if (isLetter(c)) {
@@ -427,7 +540,8 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 						sb.append(c);
 					}
 				} else if (c == '_') {
-					// NOT OK: valid NCName, but needs to be escaped for EXI4JSON
+					// NOT OK: valid NCName, but needs to be escaped for
+					// EXI4JSON
 					if (sb == null) {
 						sb = new StringBuilder();
 					}
@@ -441,17 +555,18 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 					// Is this a UTF-16 surrogate pair?
 					if (Character.isHighSurrogate(c)) {
 						// use code-point and increment loop count (2 char's)
-						sb.append((int)name.codePointAt(i++));
+						sb.append((int) name.codePointAt(i++));
 					} else {
-						sb.append((int)c);
+						sb.append((int) c);
 					}
 					sb.append(EXI4JSONConstants.ESCAPE_END_CHARACTER);
 				}
 			} else {
 				// rest of the characters
 				if (isNCNameChar(c)) {
-					if(c == '_') {
-						// NOT OK: valid NCName, but needs to be escaped for EXI4JSON
+					if (c == '_') {
+						// NOT OK: valid NCName, but needs to be escaped for
+						// EXI4JSON
 						if (sb == null) {
 							sb = new StringBuilder();
 							sb.append(name, 0, i);
@@ -473,9 +588,9 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 					// Is this a UTF-16 surrogate pair?
 					if (Character.isHighSurrogate(c)) {
 						// use code-point and increment loop count (2 char's)
-						sb.append((int)name.codePointAt(i++));
+						sb.append((int) name.codePointAt(i++));
 					} else {
-						sb.append((int)c);
+						sb.append((int) c);
 					}
 					sb.append(EXI4JSONConstants.ESCAPE_END_CHARACTER);
 				}

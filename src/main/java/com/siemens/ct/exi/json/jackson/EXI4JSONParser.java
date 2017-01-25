@@ -1,6 +1,8 @@
 package com.siemens.ct.exi.json.jackson;
 
+import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.math.BigDecimal;
 import java.math.BigInteger;
 
@@ -12,8 +14,26 @@ import com.fasterxml.jackson.core.JsonToken;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.base.ParserMinimalBase;
+import com.fasterxml.jackson.core.io.IOContext;
 
 public class EXI4JSONParser extends ParserMinimalBase  {
+	
+	InputStream in;
+	
+	IOContext ctxt;
+	
+	
+	public EXI4JSONParser(InputStream in, IOContext ctxt) {
+		this.in = in;
+		this.ctxt = ctxt;
+	}
+	
+	public EXI4JSONParser(byte[] data, int offset, int len, IOContext ctxt) {
+		this(new ByteArrayInputStream(data, offset, len), ctxt);
+	}
+	
+	
+	
 
 	@Override
 	protected void _handleEOF() throws JsonParseException {
@@ -28,7 +48,7 @@ public class EXI4JSONParser extends ParserMinimalBase  {
 	}
 
 	@Override
-	public byte[] getBinaryValue(Base64Variant arg0) throws IOException {
+	public byte[] getBinaryValue(Base64Variant b64variant) throws IOException {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -88,7 +108,7 @@ public class EXI4JSONParser extends ParserMinimalBase  {
 	}
 
 	@Override
-	public void overrideCurrentName(String arg0) {
+	public void overrideCurrentName(String name) {
 		// TODO Auto-generated method stub
 		
 	}
@@ -160,7 +180,7 @@ public class EXI4JSONParser extends ParserMinimalBase  {
 	}
 
 	@Override
-	public void setCodec(ObjectCodec arg0) {
+	public void setCodec(ObjectCodec c) {
 		// TODO Auto-generated method stub
 		
 	}
