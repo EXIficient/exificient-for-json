@@ -1,6 +1,5 @@
 package com.siemens.ct.exi.json.jackson;
 
-import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
 import java.math.BigDecimal;
@@ -11,8 +10,6 @@ import com.fasterxml.jackson.core.Base64Variant;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.base.GeneratorBase;
 import com.fasterxml.jackson.core.io.IOContext;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import com.siemens.ct.exi.exceptions.EXIException;
 import com.siemens.ct.exi.json.EXIforJSONGenerator;
 
@@ -293,34 +290,34 @@ public class EXI4JSONGenerator extends GeneratorBase {
 	
 	
 	
-	public static void main(String[] args) {
-		EXI4JSONFactory fEXI = new EXI4JSONFactory();
-		ObjectMapper mapperEXI = new ObjectMapper(fEXI);
-		ObjectMapper mapperJSON = new ObjectMapper();
-		
-		String carJson =
-			    "{ \"brand\" : \"Mercedes\", \"doors\" : 5 }";
-		
-		try {
-			// TODO currently JSON plain-text and not EXI4JSON
-		    JsonNode car = mapperJSON.readTree(carJson); // , Car.class);
-		    System.out.println("car = " + car);
-		    
-		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		    mapperEXI.writeTree(fEXI.createGenerator(baos), car);
-		    
-		    System.out.println("# EXI4JSON Bytes: " + baos.size());
-		    
-		    // read bytes again 
-		    EXI4JSONParser eparser = fEXI.createParser(baos.toByteArray());
-		    JsonNode car2 = mapperJSON.readTree(eparser);
-		    System.out.println("car2 = " + car2);
-		    
-//		    System.out.println("car.brand = " + car.brand);
-//		    System.out.println("car.doors = " + car.doors);
-		} catch (IOException e) {
-		    e.printStackTrace();
-		}
-	}
+//	public static void main(String[] args) {
+//		EXI4JSONFactory fEXI = new EXI4JSONFactory();
+//		ObjectMapper mapperEXI = new ObjectMapper(fEXI);
+//		ObjectMapper mapperJSON = new ObjectMapper();
+//		
+//		String carJson =
+//			    "{ \"brand\" : \"Mercedes\", \"doors\" : 5 }";
+//		
+//		try {
+//			// TODO currently JSON plain-text and not EXI4JSON
+//		    JsonNode car = mapperJSON.readTree(carJson); // , Car.class);
+//		    System.out.println("car = " + car);
+//		    
+//		    ByteArrayOutputStream baos = new ByteArrayOutputStream();
+//		    mapperEXI.writeTree(fEXI.createGenerator(baos), car);
+//		    
+//		    System.out.println("# EXI4JSON Bytes: " + baos.size());
+//		    
+//		    // read bytes again 
+//		    EXI4JSONParser eparser = fEXI.createParser(baos.toByteArray());
+//		    JsonNode car2 = mapperJSON.readTree(eparser);
+//		    System.out.println("car2 = " + car2);
+//		    
+////		    System.out.println("car.brand = " + car.brand);
+////		    System.out.println("car.doors = " + car.doors);
+//		} catch (IOException e) {
+//		    e.printStackTrace();
+//		}
+//	}
 
 }

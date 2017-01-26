@@ -27,7 +27,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
-import java.util.LinkedList;
 
 import javax.json.Json;
 import javax.json.stream.JsonGenerator;
@@ -58,7 +57,7 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 	StringValue sValue;
 	BooleanValue bValue;
 	FloatValue fValue;
-	String sKey;
+	// String sKey;
 
 	public EXIforJSONParser() throws EXIException, IOException {
 		super();
@@ -160,131 +159,55 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 		}
 	}
 
-	void checkPendingEvent2() {
+	EXI4JSONEvent checkPendingEvent2() throws EXIException {
 		if (jsonEvent != null) {
-			sKey = key;
-			
-//			if (key == null) {
-//				sKey = null;
-				switch (jsonEvent) {
-				case START_OBJECT:
-					llEvents.add(EXI4JSONEvents.START_OBJECT);
-					// generator.writeStartObject();
-					break;
-				case START_ARRAY:
-					llEvents.add(EXI4JSONEvents.START_ARRAY);
-					// generator.writeStartArray();
-					break;
-				case VALUE_STRING:
-					llEvents.add(EXI4JSONEvents.VALUE_STRING);
-					if (value.getValueType() == ValueType.STRING) {
-						sValue = (StringValue) value;
-					} else {
-						throw new RuntimeException("Not supported number value: " + value);
-					}
-					// generator.write(value.toString());
-					break;
-				case VALUE_NUMBER:
-					llEvents.add(EXI4JSONEvents.VALUE_NUMBER);
-
-					if (value.getValueType() == ValueType.FLOAT) {
-						fValue = (FloatValue) value;
-						// generator.write(fv.toDouble());
-						// // generator.write(new BigDecimal(fv.getMantissa() +
-						// "E"
-						// + fv.getExponent()));
-					} else {
-						throw new RuntimeException("Not supported number value: " + value);
-					}
-					break;
-				case VALUE_FALSE:
-				case VALUE_TRUE:
-					llEvents.add(EXI4JSONEvents.VALUE_BOOLEAN);
-
-					if (value.getValueType() == ValueType.BOOLEAN) {
-						bValue = (BooleanValue) value;
-						// generator.write(bv.toBoolean());
-					} else {
-						throw new RuntimeException("Not supported boolean value:" + value);
-					}
-					break;
-				case VALUE_NULL:
-					llEvents.add(EXI4JSONEvents.VALUE_NULL);
-					// generator.writeNull();
-					break;
-				default:
-					throw new RuntimeException("Not supported event in checkPendingEvent: " + jsonEvent);
+			EXI4JSONEvent ev = null;
+			switch (jsonEvent) {
+			case START_OBJECT:
+				ev = EXI4JSONEvent.START_OBJECT;
+				break;
+			case START_ARRAY:
+				ev = EXI4JSONEvent.START_ARRAY;
+				break;
+			case VALUE_STRING:
+				ev = EXI4JSONEvent.VALUE_STRING;
+				if (value.getValueType() == ValueType.STRING) {
+					sValue = (StringValue) value;
+				} else {
+					throw new RuntimeException("Not supported number value: " + value);
 				}
-//			} else {
-//				sKey = key;
-//				
-//				switch (jsonEvent) {
-//				case START_OBJECT:
-//					llEvents.add(EXI4JSONEvents.START_OBJECT_KEY);
-//					// generator.writeStartObject(key);
-//					break;
-//				case START_ARRAY:
-//					llEvents.add(EXI4JSONEvents.START_ARRAY_KEY);
-//					// generator.writeStartArray(key);
-//					break;
-//				case VALUE_STRING:
-//					llEvents.add(EXI4JSONEvents.VALUE_STRING_KEY);
-//					// generator.write(key, value.toString());
-//					if (value.getValueType() == ValueType.STRING) {
-//						sValue = (StringValue) value;
-//					} else {
-//						throw new RuntimeException("Not supported number value: " + value);
-//					}
-//					break;
-//				case VALUE_NUMBER:
-//					llEvents.add(EXI4JSONEvents.VALUE_NUMBER_KEY);
-//					if (value.getValueType() == ValueType.FLOAT) {
-//						fValue = (FloatValue) value;
-//						// generator.write(fv.toDouble());
-//						// // generator.write(new BigDecimal(fv.getMantissa() +
-//						// "E"
-//						// + fv.getExponent()));
-//					} else {
-//						throw new RuntimeException("Not supported number value: " + value);
-//					}
-//					
-//					// if(value.getValueType() == ValueType.FLOAT) {
-//					// FloatValue fv = (FloatValue) value;
-//					// generator.write(key, fv.toDouble());
-//					// } else {
-//					// throw new RuntimeException("Not supported number value: "
-//					// + value);
-//					// }
-//					break;
-//				case VALUE_FALSE:
-//				case VALUE_TRUE:
-//					llEvents.add(EXI4JSONEvents.VALUE_BOOLEAN_KEY);
-//					if (value.getValueType() == ValueType.BOOLEAN) {
-//						bValue = (BooleanValue) value;
-//						// generator.write(bv.toBoolean());
-//					} else {
-//						throw new RuntimeException("Not supported boolean value:" + value);
-//					}
-//					// if(value.getValueType() == ValueType.BOOLEAN) {
-//					// BooleanValue bv = (BooleanValue) value;
-//					// generator.write(key, bv.toBoolean());
-//					// } else {
-//					// throw new RuntimeException("Not supported boolean value:
-//					// " + value);
-//					// }
-//					break;
-//				case VALUE_NULL:
-//					llEvents.add(EXI4JSONEvents.VALUE_NULL_KEY);
-//					// generator.writeNull(key);
-//					break;
-//				default:
-//					throw new RuntimeException("Not supported event in checkPendingEvent: " + jsonEvent);
-//				}
-//			}
+				break;
+			case VALUE_NUMBER:
+				ev = EXI4JSONEvent.VALUE_NUMBER;
+				if (value.getValueType() == ValueType.FLOAT) {
+					fValue = (FloatValue) value;
+				} else {
+					throw new EXIException("Not supported number value: " + value);
+				}
+				break;
+			case VALUE_FALSE:
+			case VALUE_TRUE:
+				ev = EXI4JSONEvent.VALUE_BOOLEAN;
+				if (value.getValueType() == ValueType.BOOLEAN) {
+					bValue = (BooleanValue) value;
+				} else {
+					throw new EXIException("Not supported boolean value:" + value);
+				}
+				break;
+			case VALUE_NULL:
+				ev = EXI4JSONEvent.VALUE_NULL;
+				break;
+			default:
+				throw new EXIException("Not supported event in checkPendingEvent: " + jsonEvent);
+			}
 
 			jsonEvent = null;
 			key = null;
 			value = null;
+
+			return ev;
+		} else {
+			throw new EXIException("JSON Event null");
 		}
 	}
 
@@ -389,24 +312,13 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 		return key;
 	}
 
-	// public String readKeyName() throws EXIException, IOException {
-	// // key element
-	// key = bodyDecoder.decodeStartElement().getLocalName();
-	// key = unescapeKey(key);
-	//
-	// return key;
-	// }
+	// returns null for end
+	public EXI4JSONEvent readNextEvent() throws EXIException, IOException {
 
-	LinkedList<EXI4JSONEvents> llEvents = new LinkedList<EXI4JSONEvents>();
+		EXI4JSONEvent ev = null;
 
-	public EXI4JSONEvents readNextEvent() throws EXIException, IOException {
-		if (llEvents.size() > 0) {
-			return llEvents.removeFirst();
-		} else {
+		do {
 
-		}
-
-		while (llEvents.size() < 1) {
 			EventType next = bodyDecoder.next();
 
 			if (next == null) {
@@ -418,37 +330,24 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 				return null;
 			case CHARACTERS:
 				value = bodyDecoder.decodeCharacters();
-				checkPendingEvent2();
+				ev = checkPendingEvent2();
 				break;
 			case START_ELEMENT_NS:
 				// key element
 				key = bodyDecoder.decodeStartElement().getLocalName();
 				key = unescapeKey(key);
+				ev = EXI4JSONEvent.KEY_NAME;
 				break;
 			case START_ELEMENT:
 			case START_ELEMENT_GENERIC:
 			case START_ELEMENT_GENERIC_UNDECLARED:
 				QNameContext qncSE = bodyDecoder.decodeStartElement();
 				if (EXI4JSONConstants.LOCALNAME_MAP.equals(qncSE.getLocalName())) {
-//					if (key == null) {
-//						llEvents.add(EXI4JSONEvents.START_OBJECT);
-//						// generator.writeStartObject();
-//					} else {
-						llEvents.add(EXI4JSONEvents.START_OBJECT);
-						// generator.writeStartObject(key);
-						sKey = key;
-						key = null;
-//					}
+					ev = EXI4JSONEvent.START_OBJECT;
+					key = null;
 				} else if (EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncSE.getLocalName())) {
-//					if (key == null) {
-//						llEvents.add(EXI4JSONEvents.START_ARRAY);
-//						// generator.writeStartArray();
-//					} else {
-						llEvents.add(EXI4JSONEvents.START_ARRAY);
-						// generator.writeStartArray(key);
-						sKey = key;
-						key = null;
-//					}
+					ev = EXI4JSONEvent.START_ARRAY;
+					key = null;
 				} else if (EXI4JSONConstants.LOCALNAME_STRING.equals(qncSE.getLocalName())) {
 					// wait for value
 					jsonEvent = Event.VALUE_STRING;
@@ -463,83 +362,64 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 					jsonEvent = Event.VALUE_NULL;
 				} else if (EXI4JSONConstants.LOCALNAME_OTHER.equals(qncSE.getLocalName())) {
 					// TODO other element
-					throw new RuntimeException("'other' element not yet supported!");
+					throw new IOException("'other' element not yet supported!");
 				} else {
 					// key element --> not necessary here : MUST BE
 					// START_ELEMENT_NS
 					// key = bodyDecoder.decodeStartElement().getLocalName();
-					throw new RuntimeException("Unexpected element " + qncSE);
+					throw new IOException("Unexpected element " + qncSE);
 				}
 				break;
 			case END_ELEMENT:
 				QNameContext qncEE = bodyDecoder.decodeEndElement();
 				if (EXI4JSONConstants.LOCALNAME_MAP.equals(qncEE.getLocalName())) {
-					llEvents.add(EXI4JSONEvents.END_OBJECT);
-					// generator.writeEnd();
+					ev = EXI4JSONEvent.END_OBJECT;
 				} else if (EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncEE.getLocalName())) {
-					llEvents.add(EXI4JSONEvents.END_ARRAY);
-					// generator.writeEnd();
+					ev = EXI4JSONEvent.END_ARRAY;
 				}
 				break;
 			default:
-				throw new RuntimeException("Not supported EXI event: " + next);
+				throw new IOException("Not supported EXI event: " + next);
 			}
-		}
+		} while (ev == null);
 
-		return llEvents.removeFirst();
+		return ev;
+
 	}
 
-	enum EXI4JSONEvents {
+	public enum EXI4JSONEvent {
+		/***/
+		KEY_NAME,
 		/***/
 		START_OBJECT,
-//		/***/
-//		START_OBJECT_KEY,
 		/***/
 		END_OBJECT,
 		/***/
 		START_ARRAY,
-//		/***/
-//		START_ARRAY_KEY,
 		/***/
 		END_ARRAY,
 		/***/
 		VALUE_STRING,
-//		/***/
-//		VALUE_STRING_KEY,
 		/***/
 		VALUE_NUMBER,
-//		/***/
-//		VALUE_NUMBER_KEY,
 		/***/
 		VALUE_BOOLEAN,
-//		/***/
-//		VALUE_BOOLEAN_KEY,
 		/***/
 		VALUE_NULL,
-//		/***/
-//		VALUE_NULL_KEY
 
 	}
+	
+	public String getValueString() {
+		return sValue.toString();
+	}
 
-//	protected double getFloatValue() {
-//		if (value.getValueType() == ValueType.FLOAT) {
-//			FloatValue fv = (FloatValue) value;
-//			return fv.toDouble();
-//			// generator.write(new BigDecimal(fv.getMantissa() + "E" +
-//			// fv.getExponent()));
-//		} else {
-//			throw new RuntimeException("Not supported number value: " + value);
-//		}
-//	}
-//
-//	protected boolean getBooleanValue() {
-//		if (value.getValueType() == ValueType.BOOLEAN) {
-//			BooleanValue bv = (BooleanValue) value;
-//			return bv.toBoolean();
-//		} else {
-//			throw new RuntimeException("Not supported boolean value: " + value);
-//		}
-//	}
+	public boolean getValueBoolean() {
+		return bValue.toBoolean();
+	}
+
+	public double getValueNumberDouble() {
+		return fValue.toDouble();
+	}
 
 	protected void parseV2(InputStream isEXI4JSON, OutputStream osJSON) throws EXIException, IOException {
 		this.setInputStream(isEXI4JSON);
@@ -547,37 +427,29 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 
 		JsonGenerator generator = Json.createGenerator(new OutputStreamWriter(osJSON));
 
-//		EventType next;
-		EXI4JSONEvents ev;
+		EXI4JSONEvent ev;
+
+		String sk = null; // buffer key name
 
 		while ((ev = this.readNextEvent()) != null) {
 			switch (ev) {
-			// case START_DOCUMENT:
-			// bodyDecoder.decodeStartDocument();
-			// break;
-			// case END_DOCUMENT:
-			// readEndDocument();
-			// break;
-			// case CHARACTERS:
-			// value = bodyDecoder.decodeCharacters();
-			// checkPendingEvent(generator);
-			// break;
-			// case KEY_NAME:
-			// // key element
-			// readKeyName();
-			// break;
+			case KEY_NAME:
+				sk = this.getKeyName();
+				break;
 			case START_OBJECT:
-				if(sKey == null) {
+				if (sk == null) {
 					generator.writeStartObject();
 				} else {
-					generator.writeStartObject(sKey);
+					generator.writeStartObject(sk);
+					sk = null;
 				}
 				break;
 			case START_ARRAY:
-				if(sKey == null) {
+				if (sk == null) {
 					generator.writeStartArray();
 				} else {
-					generator.writeStartArray(sKey);
+					generator.writeStartArray(sk);
+					sk = null;
 				}
 				break;
 			case END_OBJECT:
@@ -585,125 +457,41 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 				generator.writeEnd();
 				break;
 			case VALUE_STRING:
-				if(sKey == null) {
-					generator.write(sValue.toString());
+				if (sk == null) {
+					generator.write(getValueString() );
 				} else {
-					generator.write(sKey, sValue.toString());
+					generator.write(sk, getValueString() );
+					sk = null;
 				}
 				break;
 			case VALUE_NUMBER:
-				if(sKey == null) {
-					generator.write(fValue.toDouble());
+				if (sk == null) {
+					generator.write(getValueNumberDouble());
 				} else {
-					generator.write(sKey, fValue.toDouble());
+					generator.write(sk, getValueNumberDouble());
+					sk = null;
 				}
 				break;
 			case VALUE_BOOLEAN:
-				if(sKey == null) {
-					generator.write(bValue.toBoolean());
+				if (sk == null) {
+					generator.write(getValueBoolean());
 				} else {
-					generator.write(sKey, bValue.toBoolean());
+					generator.write(sk, getValueBoolean());
+					sk = null;
 				}
 				break;
 			case VALUE_NULL:
-				if(sKey == null) {
+				if (sk == null) {
 					generator.writeNull();
 				} else {
-					generator.writeNull(sKey);
+					generator.writeNull(sk);
+					sk = null;
 				}
 				break;
-			// case END_ELEMENT:
-			// QNameContext qncEE = bodyDecoder.decodeEndElement();
-			// // checkPendingEvent(generator);
-			// if (EXI4JSONConstants.LOCALNAME_MAP.equals(qncEE.getLocalName()))
-			// {
-			// generator.writeEnd();
-			// } else if
-			// (EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncEE.getLocalName()))
-			// {
-			// generator.writeEnd();
-			// }
-			// break;
 			default:
 				throw new RuntimeException("Not supported EXI event: " + ev);
 			}
 		}
-
-		// while((next = bodyDecoder.next()) != null) {
-		// switch(next) {
-		//// case START_DOCUMENT:
-		//// bodyDecoder.decodeStartDocument();
-		//// break;
-		// case END_DOCUMENT:
-		// readEndDocument();
-		// break;
-		// case CHARACTERS:
-		// value = bodyDecoder.decodeCharacters();
-		// checkPendingEvent(generator);
-		// break;
-		// case START_ELEMENT_NS:
-		// // key element
-		// readKeyName();
-		// break;
-		// case START_ELEMENT:
-		// case START_ELEMENT_GENERIC:
-		// case START_ELEMENT_GENERIC_UNDECLARED:
-		// QNameContext qncSE = bodyDecoder.decodeStartElement();
-		// if(EXI4JSONConstants.LOCALNAME_MAP.equals(qncSE.getLocalName())) {
-		// if(key == null) {
-		// generator.writeStartObject();
-		// } else {
-		// generator.writeStartObject(key);
-		// key = null;
-		// }
-		// } else
-		// if(EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncSE.getLocalName())) {
-		// if(key == null) {
-		// generator.writeStartArray();
-		// } else {
-		// generator.writeStartArray(key);
-		// key = null;
-		// }
-		// } else
-		// if(EXI4JSONConstants.LOCALNAME_STRING.equals(qncSE.getLocalName())) {
-		// // wait for value
-		// jsonEvent = Event.VALUE_STRING;
-		// } else
-		// if(EXI4JSONConstants.LOCALNAME_NUMBER.equals(qncSE.getLocalName())) {
-		// // wait for value
-		// jsonEvent = Event.VALUE_NUMBER;
-		// } else
-		// if(EXI4JSONConstants.LOCALNAME_BOOLEAN.equals(qncSE.getLocalName()))
-		// {
-		// // wait for value
-		// jsonEvent = Event.VALUE_FALSE;
-		// } else
-		// if(EXI4JSONConstants.LOCALNAME_NULL.equals(qncSE.getLocalName())) {
-		// generator.writeNull();
-		// } else
-		// if(EXI4JSONConstants.LOCALNAME_OTHER.equals(qncSE.getLocalName())) {
-		// // TODO other element
-		// throw new RuntimeException("'other' element not yet supported!");
-		// } else {
-		// // key element --> not necessary here : MUST BE START_ELEMENT_NS
-		// // key = bodyDecoder.decodeStartElement().getLocalName();
-		// throw new RuntimeException("Unexpected element " + qncSE);
-		// }
-		// break;
-		// case END_ELEMENT:
-		// QNameContext qncEE = bodyDecoder.decodeEndElement();
-		//// checkPendingEvent(generator);
-		// if(EXI4JSONConstants.LOCALNAME_MAP.equals(qncEE.getLocalName())) {
-		// generator.writeEnd();
-		// } else
-		// if(EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncEE.getLocalName())) {
-		// generator.writeEnd();
-		// }
-		// break;
-		// default:
-		// throw new RuntimeException("Not supported EXI event: " + next);
-		// }
-		// }
 
 		generator.flush();
 	}

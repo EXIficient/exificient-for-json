@@ -228,8 +228,27 @@ public abstract class AbstractJSONDataTests extends TestCase {
 		_test(jsonTest);
 	}
 
+	/**
+	 * write JSON to EXI4JSON and deserialize it again and compare (without sharedStrings)
+	 * 
+	 * @param expected
+	 * @return
+	 * @throws EXIException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 	abstract protected int _test(String expected) throws EXIException, IOException, JSONException;
 
+	/**
+	 * write JSON to EXI4JSON and deserialize it again and compare (with sharedStrings)
+	 * 
+	 * @param expected
+	 * @param sharedStrings
+	 * @return
+	 * @throws EXIException
+	 * @throws IOException
+	 * @throws JSONException
+	 */
 	abstract protected int _test(String expected, List<String> sharedStrings)
 			throws EXIException, IOException, JSONException;
 
