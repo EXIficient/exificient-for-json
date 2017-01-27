@@ -1,10 +1,104 @@
-# exificient-for-json
-EXI for JSON - How EXI can be used to represent JSON data efficiently (see <https://www.w3.org/TR/exi-for-json/>)
+# Overview 
+
+**_exificient-for-json_** is an implementation of the EXI4JSON specification (see <https://www.w3.org/TR/exi-for-json/>). EXI4JSON converts JSON to event streams which result in a very processing efficient and compact format. Lossless round-trip conversion back to the original JSON structures is supported. EXI4JSON is based on [EXI](https://www.w3.org/TR/exi/) and uses its [built-in datatypes](https://www.w3.org/TR/exi/#encodingDatatypes).
+
+The project uses MIT license.
 
 [![Build Status](https://travis-ci.org/EXIficient/exificient-for-json.svg?branch=master)](https://travis-ci.org/EXIficient/exificient-for-json)
 
 
-### Compression
+## Background
+
+Due to its EXI/XML nature EXI4JSON can be serialized/visualized as XML. Most of the use-case do not need this features but in some situation it may turn out very hand.
+
+A JSON example 
+```
+{
+  "keyNumber": 123,
+  "keyArrayStrings": [
+    "s1",
+    "s2"
+  ]
+}
+```
+
+can be transformed to 
+
+```
+<j:map xmlns:j="http://www.w3.org/2015/EXI/json">
+  <j:keyNumber>
+    <j:number>123</j:number>
+  </j:keyNumber>
+  <j:keyArrayStrings>
+    <j:array>
+      <j:string>s1</j:string>
+      <j:string>s2</j:string>
+    </j:array>
+  </j:keyArrayStrings>
+</j:map>
+```
+
+
+## How to get it
+
+Released with Maven
+
+```
+<dependency>
+    <groupId>com.siemens.ct.exi</groupId>
+    <artifactId>exificient-for-json</artifactId>
+    <version>0.9.6</version>
+</dependency>
+```
+
+or also as snapshot.
+
+```
+<dependency>
+    <groupId>com.siemens.ct.exi</groupId>
+    <artifactId>exificient-for-json</artifactId>
+    <version>0.9.7-SNAPSHOT</version>
+</dependency>
+```
+
+## How to use the library
+
+### Java API for JSON Processing
+
+```java
+// generate by simply providing input and output
+EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+e4jGenerator.generate(isJSON, osEXI4JSON);
+// Note: one can also fire events like writeStartObject(),  writeKeyName(key) etc
+
+// parse by simply providing input and output again
+EXIforJSONParser e4jParser = new EXIforJSONParser();
+e4jParser.parse(isEXI4JSON, osJSON);
+// Note: one can again read events also fire events by readNextEvent() and getKeyName(),  getValueString() etc
+```
+
+### [Jackson](https://github.com/FasterXML) 
+
+```java
+EXI4JSONFactory fEXI = new EXI4JSONFactory();
+ObjectMapper mapperEXI = new ObjectMapper(fEXI);
+ObjectMapper mapperJSON = new ObjectMapper();
+
+String carJson =
+    "{ \"brand\" : \"Mercedes\", \"doors\" : 5 }";
+JsonNode car = mapperJSON.readTree(carJson); 
+
+// generate
+OutputStream e4jOS = ...; // output stream
+mapperEXI.writeTree(fEXI.createGenerator(e4jOS), car);
+// parse
+OutputStream e4jIS = ...; // input stream
+EXI4JSONParser eparser = fEXI.createParser(e4jIS);
+JsonNode carAgain = mapperJSON.readTree(eparser);
+```
+
+
+## Compression Results
 
 See test-data in https://github.com/EXIficient/exificient-for-json/tree/master/src/test/resources.
 
