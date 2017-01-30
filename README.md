@@ -1,6 +1,6 @@
 # Overview 
 
-**_exificient-for-json_** is an implementation in Java of the EXI4JSON specification (see <https://www.w3.org/TR/exi-for-json/>). EXI4JSON converts JSON to event streams which result in a very processing efficient and compact format. Lossless round-trip conversion back to the original JSON structures is supported. EXI4JSON is based on [EXI](https://www.w3.org/TR/exi/) and uses its [built-in datatypes](https://www.w3.org/TR/exi/#encodingDatatypes).
+**_exificient-for-json_** is an implementation of the EXI4JSON specification (see <https://www.w3.org/TR/exi-for-json/>) in Java. EXI4JSON converts JSON to event streams which result in a very processing efficient and compact format. Lossless round-trip conversion back to the original JSON structures is supported. EXI4JSON is based on [EXI](https://www.w3.org/TR/exi/) and uses its [built-in datatypes](https://www.w3.org/TR/exi/#encodingDatatypes).
 
 The project uses MIT license.
 
@@ -74,7 +74,7 @@ e4jGenerator.generate(isJSON, osEXI4JSON);
 // parse by simply providing input and output again
 EXIforJSONParser e4jParser = new EXIforJSONParser();
 e4jParser.parse(isEXI4JSON, osJSON);
-// Note: one can again read events also fire events by readNextEvent() and getKeyName(),  getValueString() etc
+// Note: one can again read events by readNextEvent(), getKeyName(),  getValueString() etc
 ```
 
 ### [Jackson](https://github.com/FasterXML) 
