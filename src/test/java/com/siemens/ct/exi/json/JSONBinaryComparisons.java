@@ -12,6 +12,7 @@ import java.util.List;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
+import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import com.siemens.ct.exi.exceptions.EXIException;
 
 public class JSONBinaryComparisons {
@@ -41,6 +42,24 @@ public class JSONBinaryComparisons {
 
 		return baos.toByteArray();
 	}
+	
+	public static byte[] encodeSmile(InputStream json) throws EXIException, IOException {
+		SmileFactory f = new SmileFactory();
+
+		ObjectMapper mapperJson = new ObjectMapper();
+		ObjectMapper mapperCbor = new ObjectMapper(f);
+		JsonNode node = mapperJson.readValue(json, JsonNode.class);
+
+		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+		mapperCbor.writeTree(f.createGenerator(baos), node);
+
+		// System.out.println("Smile " + baos.size());
+
+		@SuppressWarnings("unused")
+		JsonNode node2 = mapperCbor.readTree(baos.toByteArray());
+
+		return baos.toByteArray();
+	}
 
 	public static List<File> getFilesForFolder(final File folder, String suffix, boolean recursive) {
 		List<File> files = new ArrayList<File>();
@@ -49,7 +68,7 @@ public class JSONBinaryComparisons {
 	}
 
 	public static void test(List<File> files, PrintStream ps) throws EXIException, IOException {
-		ps.println("TestCase; JSON; CBOR; EXI4JSON");
+		ps.println("TestCase; JSON; CBOR; Smile; EXI4JSON");
 
 		for (File fj : files) {
 			test(fj, ps);
@@ -61,6 +80,12 @@ public class JSONBinaryComparisons {
 		{
 			InputStream isJSON = new FileInputStream(f);
 			sizeCBOR = encodeCBOR(isJSON).length;
+			isJSON.close();
+		}
+		int sizeSmile;
+		{
+			InputStream isJSON = new FileInputStream(f);
+			sizeSmile = encodeSmile(isJSON).length;
 			isJSON.close();
 		}
 		int sizeEXI4JSON;
@@ -77,7 +102,7 @@ public class JSONBinaryComparisons {
 			name = name.substring(fl.getAbsolutePath().length() + 1);
 		}
 
-		ps.println(name + "; " + f.length() + "; " + sizeCBOR + "; " + sizeEXI4JSON);
+		ps.println(name + "; " + f.length() + "; " + sizeCBOR + "; " + sizeSmile + "; "+ sizeEXI4JSON);
 	}
 
 	private static void addFilesForFolder(List<File> files, final File folder, String suffix, boolean recursive) {
