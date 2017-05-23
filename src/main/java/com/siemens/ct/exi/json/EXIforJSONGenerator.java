@@ -483,7 +483,7 @@ public class EXIforJSONGenerator extends AbstractEXIforJSON {
 		writeEndDocument();
 	}
 
-	protected String escapeKey(String key) {
+	public static String escapeKey(String key) {
 		if (EXI4JSONConstants.LOCALNAME_MAP.equals(key) || EXI4JSONConstants.LOCALNAME_ARRAY.equals(key)
 				|| EXI4JSONConstants.LOCALNAME_STRING.equals(key) || EXI4JSONConstants.LOCALNAME_NUMBER.equals(key)
 				|| EXI4JSONConstants.LOCALNAME_BOOLEAN.equals(key) || EXI4JSONConstants.LOCALNAME_NULL.equals(key)
