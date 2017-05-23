@@ -1,7 +1,8 @@
 language: java
 jdk:
 - oraclejdk8
-- oraclejdk7
+# JSON Schema lib requires Java8
+# - oraclejdk7
 env:
   global:
   - SONATYPE_USERNAME=daniel_peintner
