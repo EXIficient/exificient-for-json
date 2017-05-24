@@ -107,8 +107,8 @@
 		<dependency>
 		    <groupId>org.json</groupId>
 		    <artifactId>json</artifactId>
-		    <version>20170516</version>
-		    <scope>test</scope>
+		    <version>20170516</version><!-- 20090211 -->
+		    <!-- <scope>test</scope> -->
 		</dependency>
 	</dependencies>
 	
