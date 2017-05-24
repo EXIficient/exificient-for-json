@@ -67,7 +67,6 @@ public abstract class AbstractEXIforJSON {
 		this(DefaultEXIFactory.newInstance(), schemaId);
 	}
 	
-	
 	public AbstractEXIforJSON(EXIFactory ef, String schemaId) throws EXIException, IOException {
 		this.ef = ef;
 		this.schemaId = schemaId;
@@ -89,6 +88,10 @@ public abstract class AbstractEXIforJSON {
 		
 		// set to strict
 		ef.getFidelityOptions().setFidelity(FidelityOptions.FEATURE_STRICT, true);
+	}
+	
+	public EXIFactory getEXIFactory() {
+		return this.ef;
 	}
 	
 	static Grammars loadGrammars1() throws IOException, EXIException {
