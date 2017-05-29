@@ -185,7 +185,7 @@ public class HelperJSONSchema2XSD {
 		} else if (schema instanceof EnumSchema) {
 			EnumSchema es = (EnumSchema) schema;
 			
-			element.appendChild(doc.createComment(es.getDescription()));
+			// element.appendChild(doc.createComment(es.getPossibleValues().toString()));
 			
 			Element el = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element");
 			el.setAttribute("name", "string");
