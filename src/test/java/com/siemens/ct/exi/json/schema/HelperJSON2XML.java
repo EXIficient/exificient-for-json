@@ -5,6 +5,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
 import javax.xml.transform.Result;
 import javax.xml.transform.Transformer;
@@ -41,7 +42,20 @@ public class HelperJSON2XML {
 
 	
 	public static void main(String[] args) throws Exception {
-		InputStream isJSON = HelperJSON2XML.class.getResourceAsStream("/json-schema/fstab1.json");
+		// InputStream isJSON = HelperJSON2XML.class.getResourceAsStream("/json-schema/fstab1.json");
+		
+		String s = "{\r\n" + 
+				"  \"id\": 1,\r\n" + 
+				"  \"name\": \"A green door\",\r\n" + 
+				"  \"price\": 12.5,\r\n" + 
+				"  \"checked\": false,\r\n" + 
+				"  \"tags\": [\r\n" + 
+				"    \"home\",\r\n" + 
+				"    \"green\"\r\n" + 
+				"  ]\r\n" + 
+				"}";
+		InputStream isJSON = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
+		
 		ByteArrayOutputStream osXML = new ByteArrayOutputStream();
 		json2Xml(isJSON, osXML);
 		System.out.println(new String(osXML.toByteArray()));

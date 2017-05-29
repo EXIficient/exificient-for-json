@@ -146,6 +146,8 @@ public class HelperJSONSchema2XSD {
 			elArray.appendChild(elComplexType1);
 			
 			Element elSequence1 = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "sequence");
+			elSequence1.setAttribute("minOccurs", "0");
+			elSequence1.setAttribute("maxOccurs", "unbounded");
 			elComplexType1.appendChild(elSequence1);
 			
 			// TODO check result!!!
