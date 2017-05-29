@@ -64,6 +64,25 @@ public class TestJsonSchemaTools {
 		_compare(ba, bb);
 	}
 	
+	@Test
+	public void testWoT1() throws Exception {
+		String resourceJson = "/json-schema/wot1.jsonld";
+		JSONObject json = new JSONObject(new JSONTokener(new InputStreamReader(HelperJSON2XML.class.getResourceAsStream(resourceJson))));
+		// System.out.println(json);
+		
+		JSONObject jsonSchema = HelperJSON2JSONSchema.json2JsonSchema(json);
+		System.out.println(jsonSchema);
+		
+		// built-in schema
+		byte[] ba = _testA(HelperJSON2XML.class.getResourceAsStream(resourceJson));
+		
+		// JSON schema
+		InputStream isJsonSchema = new ByteArrayInputStream(jsonSchema.toString().getBytes(StandardCharsets.UTF_8));
+		byte[] bb = _testB(HelperJSON2XML.class.getResourceAsStream(resourceJson), isJsonSchema);
+		
+		_compare(ba, bb);
+	}
+	
 	
 	private void _test(String resourceJson, String resourceJsonSchema) throws Exception {
 		// built-in schema
