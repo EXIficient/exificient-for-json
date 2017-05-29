@@ -112,7 +112,7 @@ public class HelperJSONSchema2XSD {
 			Set<String> keys = propSchema.keySet();
 			for (String key : keys) {
 				Schema s = propSchema.get(key);
-				LOGGER.info("\t" + key + " --> " + s);
+				LOGGER.info("\t" + key + " --> " + s.getId());
 
 				Element el = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element");
 				el.setAttribute("name", EXIforJSONGenerator.escapeKey(key));
