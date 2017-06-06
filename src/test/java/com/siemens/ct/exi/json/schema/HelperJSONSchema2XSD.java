@@ -1,5 +1,6 @@
 package com.siemens.ct.exi.json.schema;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -24,6 +25,7 @@ import org.everit.json.schema.ArraySchema;
 import org.everit.json.schema.BooleanSchema;
 import org.everit.json.schema.CombinedSchema;
 import org.everit.json.schema.EnumSchema;
+import org.everit.json.schema.NullSchema;
 import org.everit.json.schema.NumberSchema;
 import org.everit.json.schema.ObjectSchema;
 import org.everit.json.schema.Schema;
@@ -260,6 +262,14 @@ public class HelperJSONSchema2XSD {
 			el.setAttribute("type", typeName);
 			// elSequence.appendChild(el);
 			element.appendChild(el);
+		} else if (schema instanceof NullSchema) {
+			NullSchema ns = (NullSchema) schema;
+
+			Element el = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element");
+			el.setAttribute("name", "null");
+			el.appendChild(doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "complexType"));
+			// elSequence.appendChild(el);
+			element.appendChild(el);
 		} else {
 			LOGGER.info("Unknown Schema " + schema);
 			throw new RuntimeException("Unknown Schema " + schema);
@@ -278,6 +288,14 @@ public class HelperJSONSchema2XSD {
 		ByteArrayOutputStream osXSD2 = new ByteArrayOutputStream();
 		jsonSchema2Xsd(inputStreamFstab, osXSD2);
 		System.out.println(new String(osXSD2.toByteArray()));
+		
+		// TEST
+		String jsonSchema = "{\r\n" + 
+				"  \"type\": \"null\"\r\n" + 
+				"}";
+		ByteArrayOutputStream osXSD3 = new ByteArrayOutputStream();
+		jsonSchema2Xsd(new ByteArrayInputStream(jsonSchema.getBytes()), osXSD3);
+		System.out.println(new String(osXSD3.toByteArray()));
 
 	}
 }
