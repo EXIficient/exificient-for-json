@@ -67,15 +67,15 @@ public class JSONBinaryComparisons {
 		return files;
 	}
 
-	public static void test(List<File> files, PrintStream ps) throws EXIException, IOException {
+	public static void test(List<File> files, String removePath, PrintStream ps) throws EXIException, IOException {
 		ps.println("TestCase; JSON; CBOR; Smile; EXI4JSON");
 
 		for (File fj : files) {
-			test(fj, ps);
+			test(fj, removePath, ps);
 		}
 	}
 
-	public static void test(File f, PrintStream ps) throws EXIException, IOException {
+	public static void test(File f, String removePath, PrintStream ps) throws EXIException, IOException {
 		int sizeCBOR;
 		{
 			InputStream isJSON = new FileInputStream(f);
@@ -95,11 +95,12 @@ public class JSONBinaryComparisons {
 			isJSON.close();
 		}
 
-		// remove local path
-		File fl = new File(AbstractEXIforJSON.class.getResource("/").getFile());
+		// remove path
+		// File fl = new File(AbstractEXIforJSON.class.getResource("/").getFile());
 		String name = f.getAbsolutePath();
-		if (name.startsWith(fl.getAbsolutePath())) {
-			name = name.substring(fl.getAbsolutePath().length() + 1);
+		// if (name.startsWith(fl.getAbsolutePath())) {
+		if (name.startsWith(removePath)) {
+			name = name.substring(removePath.length() + 1);
 		}
 
 		ps.println(name + "; " + f.length() + "; " + sizeCBOR + "; " + sizeSmile + "; "+ sizeEXI4JSON);
@@ -126,11 +127,24 @@ public class JSONBinaryComparisons {
 		// AbstractEXIforJSON.class.getResource("/gpx/sample-set-1/gpx-1-1pts.json");
 		// URL urlJSON = AbstractEXIforJSON.class.getResource("/glossary.json");
 
-		File f = new File(AbstractEXIforJSON.class.getResource("/").getFile());
-		System.out.println(f);
-		List<File> files = getFilesForFolder(f, ".json", true);
+		List<File> files;
+		String removePath = "";
+		
+//		// local test files
+//		{
+//			File f = new File(AbstractEXIforJSON.class.getResource("/").getFile());
+//			files = getFilesForFolder(f, ".json", true);
+//			removePath = f.getAbsolutePath();
+//		}
+		
+		// WoT test-bed files
+		{
+			File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\");
+			files = getFilesForFolder(f, ".jsonld", true);
+			removePath = f.getAbsolutePath();
+		}		
 
-		test(files, System.out);
+		test(files, removePath, System.out);
 
 		// {
 		// InputStream isJSON = urlJSON.openStream();

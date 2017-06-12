@@ -291,7 +291,64 @@ public class HelperJSONSchema2XSD {
 		
 		// TEST
 		String jsonSchema = "{\r\n" + 
-				"  \"type\": \"null\"\r\n" + 
+				"  \"type\": \"object\",\r\n" + 
+				"  \"properties\": {\r\n" + 
+				"    \"@context\": {\r\n" + 
+				"      \"type\": \"array\",\r\n" + 
+				"      \"items\": {\r\n" + 
+				"        \"type\": \"string\"\r\n" + 
+				"      }\r\n" + 
+				"    },\r\n" + 
+				"    \"@type\": {\r\n" + 
+				"      \"type\": \"string\"\r\n" + 
+				"    },\r\n" + 
+				"    \"name\": {\r\n" + 
+				"      \"type\": \"string\"\r\n" + 
+				"    },\r\n" + 
+				"    \"interactions\": {\r\n" + 
+				"      \"type\": \"array\",\r\n" + 
+				"      \"items\": {\r\n" + 
+				"        \"type\": \"object\",\r\n" + 
+				"        \"properties\": {\r\n" + 
+				"          \"@type\": {\r\n" + 
+				"            \"type\": \"array\",\r\n" + 
+				"            \"items\": {\r\n" + 
+				"              \"type\": \"string\"\r\n" + 
+				"            }\r\n" + 
+				"          },\r\n" + 
+				"          \"name\": {\r\n" + 
+				"            \"type\": \"string\"\r\n" + 
+				"          },\r\n" + 
+				"          \"outputData\": {\r\n" + 
+				"            \"type\": \"object\"\r\n" + 
+				"          },\r\n" + 
+				"          \"writable\": {\r\n" + 
+				"            \"type\": \"boolean\"\r\n" + 
+				"          },\r\n" + 
+				"          \"links\": {\r\n" + 
+				"            \"type\": \"array\",\r\n" + 
+				"            \"items\": {\r\n" + 
+				"              \"type\": \"object\",\r\n" + 
+				"              \"properties\": {\r\n" + 
+				"                \"href\": {\r\n" + 
+				"                  \"type\": \"string\"\r\n" + 
+				"                },\r\n" + 
+				"                \"mediaType\": {\r\n" + 
+				"                  \"type\": \"string\"\r\n" + 
+				"                }\r\n" + 
+				"              }\r\n" + 
+				"            }\r\n" + 
+				"          }\r\n" + 
+				"        },\r\n" + 
+				"        \"required\": [\r\n" + 
+				"          \"name\"\r\n" + 
+				"        ]\r\n" + 
+				"      }\r\n" + 
+				"    }\r\n" + 
+				"  },\r\n" + 
+				"  \"required\": [\r\n" + 
+				"    \"name\"\r\n" + 
+				"  ]\r\n" + 
 				"}";
 		ByteArrayOutputStream osXSD3 = new ByteArrayOutputStream();
 		jsonSchema2Xsd(new ByteArrayInputStream(jsonSchema.getBytes()), osXSD3);
