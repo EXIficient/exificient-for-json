@@ -45,14 +45,19 @@ public class HelperJSON2XML {
 		// InputStream isJSON = HelperJSON2XML.class.getResourceAsStream("/json-schema/fstab1.json");
 		
 		String s = "{\r\n" + 
-				"  \"id\": 1,\r\n" + 
-				"  \"name\": \"A green door\",\r\n" + 
-				"  \"price\": 12.5,\r\n" + 
-				"  \"checked\": false,\r\n" + 
-				"  \"tags\": [\r\n" + 
-				"    \"home\",\r\n" + 
-				"    \"green\"\r\n" + 
-				"  ]\r\n" + 
+				"    \"@context\": [\"http://w3c.github.io/wot/w3c-wot-td-context.jsonld\"],\r\n" + 
+				"    \"@type\": \"Thing\",\r\n" + 
+				"    \"name\": \"MyTemperatureThing\",\r\n" + 
+				"    \"interactions\": [{\r\n" + 
+				"        \"@type\": [\"Property\"],\r\n" + 
+				"        \"name\": \"temperature\",\r\n" + 
+				"        \"outputData\": {\"valueType\": {\"type\": \"number\"}},\r\n" + 
+				"        \"writable\": false,\r\n" + 
+				"        \"links\": [{\r\n" + 
+				"            \"href\": \"coap://mytemp.example.com:5683/temp\",\r\n" + 
+				"            \"mediaType\": \"application/json\"\r\n" + 
+				"        }]\r\n" + 
+				"    }]\r\n" + 
 				"}";
 		InputStream isJSON = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
 		

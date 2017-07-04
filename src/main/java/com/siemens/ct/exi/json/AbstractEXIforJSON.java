@@ -83,11 +83,10 @@ public abstract class AbstractEXIforJSON {
 				g = loadGrammars2();
 			}
 			ef.setGrammars(g);
+			
+			// set to strict
+			ef.getFidelityOptions().setFidelity(FidelityOptions.FEATURE_STRICT, true);
 		}
-
-		
-		// set to strict
-		ef.getFidelityOptions().setFidelity(FidelityOptions.FEATURE_STRICT, true);
 	}
 	
 	public EXIFactory getEXIFactory() {

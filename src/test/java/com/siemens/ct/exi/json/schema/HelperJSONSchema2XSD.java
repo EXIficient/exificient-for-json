@@ -103,38 +103,89 @@ public class HelperJSONSchema2XSD {
 
 			Element elComplexType2 = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "complexType");
 			elMap.appendChild(elComplexType2);
+			
+			if(false) {
+				// all
+				
+				Element elAll = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "all");
+				elComplexType2.appendChild(elAll);
 
-			Element elAll = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "all");
-			elComplexType2.appendChild(elAll);
+				List<String> requiredProps = os.getRequiredProperties();
+				LOGGER.info("requiredProps: " + requiredProps);
 
-			List<String> requiredProps = os.getRequiredProperties();
-			LOGGER.info("requiredProps: " + requiredProps);
+				Map<String, Schema> propSchema = os.getPropertySchemas();
+				Set<String> keys = propSchema.keySet();
+				for (String key : keys) {
+					Schema s = propSchema.get(key);
+					LOGGER.info("\t" + key + " --> " + s.getId());
 
-			Map<String, Schema> propSchema = os.getPropertySchemas();
-			Set<String> keys = propSchema.keySet();
-			for (String key : keys) {
-				Schema s = propSchema.get(key);
-				LOGGER.info("\t" + key + " --> " + s.getId());
+					Element el = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element");
+					el.setAttribute("name", EXIforJSONGenerator.escapeKey(key));
+					if (requiredProps.contains(key)) {
+						// required --> default is 1
+					} else {
+						el.setAttribute("minOccurs", "0");
+					}
+					elAll.appendChild(el);
+					
+					
+					Element elComplexType1 = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "complexType");
+					el.appendChild(elComplexType1);
+					
+					Element elSequence = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "sequence");
+					elComplexType1.appendChild(elSequence);
 
-				Element el = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element");
-				el.setAttribute("name", EXIforJSONGenerator.escapeKey(key));
-				if (requiredProps.contains(key)) {
-					// required --> default is 1
-				} else {
-					el.setAttribute("minOccurs", "0");
+					//
+					processSchema(doc, elSequence, s);
 				}
-				elAll.appendChild(el);
+			} else {
+				// choice (causes UPA in Schema1.0 in case of "additionalProperties" flag, Schema1.1 just fine)
 				
-				
-				Element elComplexType1 = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "complexType");
-				el.appendChild(elComplexType1);
-				
-				Element elSequence = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "sequence");
-				elComplexType1.appendChild(elSequence);
+				Element elChoice = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "choice");
+				elChoice.setAttribute("minOccurs", "0");
+				elChoice.setAttribute("maxOccurs", "unbounded");
+				elComplexType2.appendChild(elChoice);
 
-				//
-				processSchema(doc, elSequence, s);
+				List<String> requiredProps = os.getRequiredProperties();
+				LOGGER.info("requiredProps: " + requiredProps);
+
+				Map<String, Schema> propSchema = os.getPropertySchemas();
+				Set<String> keys = propSchema.keySet();
+				for (String key : keys) {
+					Schema s = propSchema.get(key);
+					LOGGER.info("\t" + key + " --> " + s.getId());
+
+					Element el = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "element");
+					el.setAttribute("name", EXIforJSONGenerator.escapeKey(key));
+//					if (requiredProps.contains(key)) {
+//						// required --> default is 1
+//					} else {
+//						el.setAttribute("minOccurs", "0");
+//					}
+					elChoice.appendChild(el);
+					
+					
+					Element elComplexType1 = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "complexType");
+					el.appendChild(elComplexType1);
+					
+					Element elSequence = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "sequence");
+					elComplexType1.appendChild(elSequence);
+
+					//
+					processSchema(doc, elSequence, s);
+				}
+				
+				
+				if(os.permitsAdditionalProperties()) {
+					Element elAny = doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "any");
+					elAny.setAttribute("namespace", "##targetNamespace");
+					elAny.setAttribute("processContents", "lax");
+					elChoice.appendChild(elAny);
+				}
+				
 			}
+
+
 
 		} else if (schema instanceof ArraySchema) {
 			LOGGER.info("ArraySchema");
@@ -290,65 +341,23 @@ public class HelperJSONSchema2XSD {
 		System.out.println(new String(osXSD2.toByteArray()));
 		
 		// TEST
-		String jsonSchema = "{\r\n" + 
-				"  \"type\": \"object\",\r\n" + 
-				"  \"properties\": {\r\n" + 
-				"    \"@context\": {\r\n" + 
-				"      \"type\": \"array\",\r\n" + 
-				"      \"items\": {\r\n" + 
-				"        \"type\": \"string\"\r\n" + 
-				"      }\r\n" + 
-				"    },\r\n" + 
-				"    \"@type\": {\r\n" + 
-				"      \"type\": \"string\"\r\n" + 
-				"    },\r\n" + 
-				"    \"name\": {\r\n" + 
-				"      \"type\": \"string\"\r\n" + 
-				"    },\r\n" + 
-				"    \"interactions\": {\r\n" + 
-				"      \"type\": \"array\",\r\n" + 
-				"      \"items\": {\r\n" + 
-				"        \"type\": \"object\",\r\n" + 
-				"        \"properties\": {\r\n" + 
-				"          \"@type\": {\r\n" + 
-				"            \"type\": \"array\",\r\n" + 
-				"            \"items\": {\r\n" + 
-				"              \"type\": \"string\"\r\n" + 
-				"            }\r\n" + 
-				"          },\r\n" + 
-				"          \"name\": {\r\n" + 
-				"            \"type\": \"string\"\r\n" + 
-				"          },\r\n" + 
-				"          \"outputData\": {\r\n" + 
-				"            \"type\": \"object\"\r\n" + 
-				"          },\r\n" + 
-				"          \"writable\": {\r\n" + 
-				"            \"type\": \"boolean\"\r\n" + 
-				"          },\r\n" + 
-				"          \"links\": {\r\n" + 
-				"            \"type\": \"array\",\r\n" + 
-				"            \"items\": {\r\n" + 
-				"              \"type\": \"object\",\r\n" + 
-				"              \"properties\": {\r\n" + 
-				"                \"href\": {\r\n" + 
-				"                  \"type\": \"string\"\r\n" + 
-				"                },\r\n" + 
-				"                \"mediaType\": {\r\n" + 
-				"                  \"type\": \"string\"\r\n" + 
-				"                }\r\n" + 
-				"              }\r\n" + 
-				"            }\r\n" + 
-				"          }\r\n" + 
-				"        },\r\n" + 
-				"        \"required\": [\r\n" + 
-				"          \"name\"\r\n" + 
-				"        ]\r\n" + 
-				"      }\r\n" + 
-				"    }\r\n" + 
-				"  },\r\n" + 
-				"  \"required\": [\r\n" + 
-				"    \"name\"\r\n" + 
-				"  ]\r\n" + 
+		String jsonSchema = "{\n" + 
+				"    \"title\": \"Person\",\n" + 
+				"    \"type\": \"object\",\n" + 
+				"    \"properties\": {\n" + 
+				"        \"firstName\": {\n" + 
+				"            \"type\": \"string\"\n" + 
+				"        },\n" + 
+				"        \"lastName\": {\n" + 
+				"            \"type\": \"string\"\n" + 
+				"        },\n" + 
+				"        \"age\": {\n" + 
+				"            \"description\": \"Age in years\",\n" + 
+				"            \"type\": \"integer\",\n" + 
+				"            \"minimum\": 0\n" + 
+				"        }\n" + 
+				"    },\n" + 
+				"    \"required\": [\"firstName\", \"lastName\"]\n" + 
 				"}";
 		ByteArrayOutputStream osXSD3 = new ByteArrayOutputStream();
 		jsonSchema2Xsd(new ByteArrayInputStream(jsonSchema.getBytes()), osXSD3);
