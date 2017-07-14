@@ -11,17 +11,11 @@ import java.io.PrintStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
-
-import org.json.JSONException;
-
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.dataformat.cbor.CBORFactory;
 import com.fasterxml.jackson.dataformat.smile.SmileFactory;
 import com.siemens.ct.exi.EXIFactory;
-import com.siemens.ct.exi.FidelityOptions;
 import com.siemens.ct.exi.GrammarFactory;
 import com.siemens.ct.exi.exceptions.EXIException;
 import com.siemens.ct.exi.helpers.DefaultEXIFactory;
@@ -90,7 +84,7 @@ public class JSONBinaryComparisons {
 	}
 
 	public static void test(List<File> files, String removePath, PrintStream ps, EXIFactory ef) throws EXIException, IOException {
-		String header = "TestCase" + SEPARATOR + " JSON" + SEPARATOR + "CBOR" + SEPARATOR + " Smile" + SEPARATOR + " EXI4JSON";
+		String header = "TestCase" + SEPARATOR + " JSON" + SEPARATOR + " JSONminified" + SEPARATOR + " CBOR" + SEPARATOR + " Smile" + SEPARATOR + " EXI4JSON";
 		if(ef != null) {
 			header += SEPARATOR + " EXI4JSONSchema";
 		}
@@ -102,6 +96,14 @@ public class JSONBinaryComparisons {
 	}
 
 	public static void test(File f, String removePath, PrintStream ps, EXIFactory ef) throws EXIException, IOException {
+		long sizeJSONminified;
+		{
+			ObjectMapper objectMapper = new ObjectMapper();
+		    JsonNode jsonNode = objectMapper.readValue(f, JsonNode.class);
+		    // System.out.println(jsonNode.toString());
+			sizeJSONminified = jsonNode.toString().length();
+		}
+		
 		int sizeCBOR;
 		{
 			InputStream isJSON = new FileInputStream(f);
@@ -136,9 +138,9 @@ public class JSONBinaryComparisons {
 		}
 
 		if(ef != null) {
-			ps.println(name + SEPARATOR + f.length() + SEPARATOR  + sizeCBOR + SEPARATOR  + sizeSmile + SEPARATOR + sizeEXI4JSON + SEPARATOR + sizeEXI4JSONSchema);
+			ps.println(name + SEPARATOR + f.length() + SEPARATOR + sizeJSONminified + SEPARATOR  + sizeCBOR + SEPARATOR  + sizeSmile + SEPARATOR + sizeEXI4JSON + SEPARATOR + sizeEXI4JSONSchema);
 		} else {
-			ps.println(name + SEPARATOR  + f.length() + SEPARATOR  + sizeCBOR + SEPARATOR + sizeSmile + SEPARATOR + sizeEXI4JSON);
+			ps.println(name + SEPARATOR + f.length() + SEPARATOR + sizeJSONminified + SEPARATOR  + sizeCBOR + SEPARATOR + sizeSmile + SEPARATOR + sizeEXI4JSON);
 		}
 		
 	}
@@ -188,6 +190,8 @@ public class JSONBinaryComparisons {
 			ef = DefaultEXIFactory.newInstance();
 			// ef.setFidelityOptions(FidelityOptions.createStrict());
 			InputStream isJsonSchema = new FileInputStream("D:\\Projects\\WoT\\thing-description-tests\\wot-td-osaka.jsonschema");
+			// InputStream isJsonSchema = new FileInputStream("D:\\Projects\\WoT\\thing-description-tests\\td-schema-victor.json");
+			
 			File fXSD = File.createTempFile("json", ".xsd");
 			OutputStream osXSD = new FileOutputStream(fXSD);
 			HelperJSONSchema2XSD.jsonSchema2Xsd(isJsonSchema, osXSD);

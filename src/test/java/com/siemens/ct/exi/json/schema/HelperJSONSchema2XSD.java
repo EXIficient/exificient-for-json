@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.Reader;
+import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -24,10 +25,12 @@ import javax.xml.transform.stream.StreamResult;
 import org.everit.json.schema.ArraySchema;
 import org.everit.json.schema.BooleanSchema;
 import org.everit.json.schema.CombinedSchema;
+import org.everit.json.schema.EmptySchema;
 import org.everit.json.schema.EnumSchema;
 import org.everit.json.schema.NullSchema;
 import org.everit.json.schema.NumberSchema;
 import org.everit.json.schema.ObjectSchema;
+import org.everit.json.schema.ReferenceSchema;
 import org.everit.json.schema.Schema;
 import org.everit.json.schema.StringSchema;
 import org.everit.json.schema.loader.SchemaLoader;
@@ -215,8 +218,14 @@ public class HelperJSONSchema2XSD {
 //			    anyOf: Must be valid against any of the subschemas
 //			    oneOf: Must be valid against exactly one of the subschemas
 
-			throw new RuntimeException("TODO CombinedSchema");
+			// throw new RuntimeException("TODO CombinedSchema");
+			System.err.println("TODO CombinedSchema");
 
+//			Collection<Schema> ss = cs.getSubschemas();
+//			for(Schema s : ss) {
+//				processSchema(doc, element, s);	
+//			}
+			
 //			// TODO check which one (allOf, anyOf, oneOf)!!
 //			ValidationCriterion vc = cs.getCriterion();
 //			
@@ -321,6 +330,13 @@ public class HelperJSONSchema2XSD {
 			el.appendChild(doc.createElementNS(XMLConstants.W3C_XML_SCHEMA_NS_URI, "complexType"));
 			// elSequence.appendChild(el);
 			element.appendChild(el);
+		} else if (schema instanceof ReferenceSchema) {
+			ReferenceSchema rs = (ReferenceSchema) schema;
+			Schema rrs = rs.getReferredSchema();
+			System.out.println("RS: " + rrs.getTitle());
+			processSchema(doc, element, rrs);
+		} else if (schema instanceof EmptySchema) {
+			// TODO what to do with empty schema
 		} else {
 			LOGGER.info("Unknown Schema " + schema);
 			throw new RuntimeException("Unknown Schema " + schema);
