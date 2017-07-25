@@ -60,8 +60,8 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 	@Test
 	public void testEscapeKey0() throws EXIException, IOException, JSONException {
 		String key = "normalKey";
-		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-		String ekey = e4jGenerator.escapeKey(key);
+//		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = EXIforJSONGenerator.escapeKey(key);
 
 		assertTrue(key.equals(ekey));
 
@@ -73,8 +73,8 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 	@Test
 	public void testEscapeKey1() throws EXIException, IOException, JSONException {
 		String key = EXI4JSONConstants.LOCALNAME_NUMBER; // "number"
-		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-		String ekey = e4jGenerator.escapeKey(key);
+//		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = EXIforJSONGenerator.escapeKey(key);
 
 		assertFalse(key.equals(ekey));
 		assertTrue((String.valueOf(EXI4JSONConstants.ESCAPE_START_CHARACTER)
@@ -89,8 +89,8 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 	@Test
 	public void testEscapeKey2() throws EXIException, IOException, JSONException {
 		String key = "a number";
-		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-		String ekey = e4jGenerator.escapeKey(key);
+//		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = EXIforJSONGenerator.escapeKey(key);
 
 		assertFalse(key.equals(ekey));
 		assertTrue("a_32.number".equals(ekey));
@@ -103,8 +103,8 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 	@Test
 	public void testEscapeKey3() throws EXIException, IOException, JSONException {
 		String key = "_foo";
-		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-		String ekey = e4jGenerator.escapeKey(key);
+//		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = EXIforJSONGenerator.escapeKey(key);
 
 		assertFalse(key.equals(ekey));
 		assertTrue("_95.foo".equals(ekey));
@@ -117,8 +117,8 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 	@Test
 	public void testEscapeKey4() throws EXIException, IOException, JSONException {
 		String key = "foo_.A";
-		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-		String ekey = e4jGenerator.escapeKey(key);
+//		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = EXIforJSONGenerator.escapeKey(key);
 
 		assertFalse(key.equals(ekey));
 		assertTrue("foo_95..A".equals(ekey));
@@ -139,8 +139,8 @@ public class JSONDataTestsV2 extends AbstractJSONDataTests {
 
 		String key = new String(data, "UTF-16");
 
-		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
-		String ekey = e4jGenerator.escapeKey(key);
+//		EXIforJSONGenerator e4jGenerator = new EXIforJSONGenerator();
+		String ekey = EXIforJSONGenerator.escapeKey(key);
 
 		assertFalse(key.equals(ekey));
 		assertTrue("A_66562.B".equals(ekey));

@@ -376,6 +376,8 @@ public class EXIforJSONParser extends AbstractEXIforJSON {
 					ev = EXI4JSONEvent.END_OBJECT;
 				} else if (EXI4JSONConstants.LOCALNAME_ARRAY.equals(qncEE.getLocalName())) {
 					ev = EXI4JSONEvent.END_ARRAY;
+				} else if (EXI4JSONConstants.LOCALNAME_NULL.equals(qncEE.getLocalName())) {
+					ev = EXI4JSONEvent.VALUE_NULL;
 				}
 				break;
 			default:

@@ -69,6 +69,70 @@ public abstract class AbstractJSONDataTests extends TestCase {
 		_test(sCar, sharedStrings);
 	}
 
+	// http://json.org/example.html
+	String sGlossary = "{\r\n" + 
+			"    \"glossary\": {\r\n" + 
+			"        \"title\": \"example glossary\",\r\n" + 
+			"		\"GlossDiv\": {\r\n" + 
+			"            \"title\": \"S\",\r\n" + 
+			"			\"GlossList\": {\r\n" + 
+			"                \"GlossEntry\": {\r\n" + 
+			"                    \"ID\": \"SGML\",\r\n" + 
+			"					\"SortAs\": \"SGML\",\r\n" + 
+			"					\"GlossTerm\": \"Standard Generalized Markup Language\",\r\n" + 
+			"					\"Acronym\": \"SGML\",\r\n" + 
+			"					\"Abbrev\": \"ISO 8879:1986\",\r\n" + 
+			"					\"GlossDef\": {\r\n" + 
+			"                        \"para\": \"A meta-markup language, used to create markup languages such as DocBook.\",\r\n" + 
+			"						\"GlossSeeAlso\": [\"GML\", \"XML\"]\r\n" + 
+			"                    },\r\n" + 
+			"					\"GlossSee\": \"markup\"\r\n" + 
+			"                }\r\n" + 
+			"            }\r\n" + 
+			"        }\r\n" + 
+			"    }\r\n" + 
+			"}";
+	
+	@Test
+	public void testGlossary() throws EXIException, IOException, JSONException {
+		_test(sGlossary);
+	}
+
+	
+	// http://json.org/example.html
+	String sMenu = "{\"menu\": {\r\n" + 
+			"    \"header\": \"SVG Viewer\",\r\n" + 
+			"    \"items\": [\r\n" + 
+			"        {\"id\": \"Open\"},\r\n" + 
+			"        {\"id\": \"OpenNew\", \"label\": \"Open New\"},\r\n" + 
+			"        null,\r\n" + 
+			"        {\"id\": \"ZoomIn\", \"label\": \"Zoom In\"},\r\n" + 
+			"        {\"id\": \"ZoomOut\", \"label\": \"Zoom Out\"},\r\n" + 
+			"        {\"id\": \"OriginalView\", \"label\": \"Original View\"},\r\n" + 
+			"        null,\r\n" + 
+			"        {\"id\": \"Quality\"},\r\n" + 
+			"        {\"id\": \"Pause\"},\r\n" + 
+			"        {\"id\": \"Mute\"},\r\n" + 
+			"        null,\r\n" + 
+			"        {\"id\": \"Find\", \"label\": \"Find...\"},\r\n" + 
+			"        {\"id\": \"FindAgain\", \"label\": \"Find Again\"},\r\n" + 
+			"        {\"id\": \"Copy\"},\r\n" + 
+			"        {\"id\": \"CopyAgain\", \"label\": \"Copy Again\"},\r\n" + 
+			"        {\"id\": \"CopySVG\", \"label\": \"Copy SVG\"},\r\n" + 
+			"        {\"id\": \"ViewSVG\", \"label\": \"View SVG\"},\r\n" + 
+			"        {\"id\": \"ViewSource\", \"label\": \"View Source\"},\r\n" + 
+			"        {\"id\": \"SaveAs\", \"label\": \"Save As\"},\r\n" + 
+			"        null,\r\n" + 
+			"        {\"id\": \"Help\"},\r\n" + 
+			"        {\"id\": \"About\", \"label\": \"About Adobe CVG Viewer...\"}\r\n" + 
+			"    ]\r\n" + 
+			"}}";
+	
+	@Test
+	public void testMenu() throws EXIException, IOException, JSONException {
+		_test(sMenu);
+	}
+
 	
 	// URL url = new URL("https://raw.githubusercontent.com/w3c/wot/master/TF-TD/TD%20Samples/outlet.jsonld");
 	String sOutlet = "{\r\n" + 
