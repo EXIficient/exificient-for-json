@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>com.siemens.ct.exi</groupId>
 			<artifactId>exificient</artifactId>
-			<version>0.9.7-SNAPSHOT</version>
+			<version>0.9.7</version><!-- -SNAPSHOT -->
 		</dependency>
 		<!-- Jackson support   -->
 		<dependency>
