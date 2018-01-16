@@ -57,7 +57,7 @@ or also as snapshot.
 <dependency>
     <groupId>com.siemens.ct.exi</groupId>
     <artifactId>exificient-for-json</artifactId>
-    <version>0.9.7-SNAPSHOT</version>
+    <version>1.0.0-SNAPSHOT</version>
 </dependency>
 ```
 
