@@ -45,19 +45,69 @@ public class HelperJSON2XML {
 		// InputStream isJSON = HelperJSON2XML.class.getResourceAsStream("/json-schema/fstab1.json");
 		
 		String s = "{\r\n" + 
-				"    \"@context\": [\"http://w3c.github.io/wot/w3c-wot-td-context.jsonld\"],\r\n" + 
-				"    \"@type\": \"Thing\",\r\n" + 
-				"    \"name\": \"MyTemperatureThing\",\r\n" + 
-				"    \"interactions\": [{\r\n" + 
-				"        \"@type\": [\"Property\"],\r\n" + 
-				"        \"name\": \"temperature\",\r\n" + 
-				"        \"outputData\": {\"valueType\": {\"type\": \"number\"}},\r\n" + 
-				"        \"writable\": false,\r\n" + 
-				"        \"links\": [{\r\n" + 
-				"            \"href\": \"coap://mytemp.example.com:5683/temp\",\r\n" + 
-				"            \"mediaType\": \"application/json\"\r\n" + 
-				"        }]\r\n" + 
-				"    }]\r\n" + 
+				"	\"@context\": [\r\n" + 
+				"		\"http://w3c.github.io/wot/w3c-wot-td-context.jsonld\",\r\n" + 
+				"		{ \"actuator\": \"http://example.org/actuator#\" }\r\n" + 
+				"	],\r\n" + 
+				"	\"@type\": [\"Thing\"],\r\n" + 
+				"	\"name\": \"MyLEDThing\",\r\n" + 
+				"	\"base\": \"coap://myled.example.com:5683/\",\r\n" + 
+				"	\"security\": {\r\n" + 
+				"			\"cat\": \"token:jwt\",\r\n" + 
+				"			\"alg\": \"HS256\",\r\n" + 
+				"			\"as\": \"https://authority-issuing.example.org\"\r\n" + 
+				"		},\r\n" + 
+				"	\"interaction\": [\r\n" + 
+				"		{\r\n" + 
+				"			\"@type\": [\"Property\",\"actuator:onOffStatus\"],\r\n" + 
+				"			\"name\": \"status\",\r\n" + 
+				"			\"outputData\": { \"type\": \"boolean\" },\r\n" + 
+				"			\"writable\": true,\r\n" + 
+				"			\"link\": [{\r\n" + 
+				"				\"href\" : \"pwr\", \r\n" + 
+				"				\"mediaType\": \"application/exi\" \r\n" + 
+				"			},\r\n" + 
+				"			{\r\n" + 
+				"				\"href\" : \"http://mytemp.example.com:8080/status\",\r\n" + 
+				"				\"mediaType\": \"application/json\"\r\n" + 
+				"			}]\r\n" + 
+				"		},\r\n" + 
+				"		{\r\n" + 
+				"			\"@type\": [\"Action\",\"actuator:fadeIn\"],\r\n" + 
+				"			\"name\": \"fadeIn\",\r\n" + 
+				"			\"inputData\": { \"type\": \"integer\" },\r\n" + 
+				"			\"link\": [{\r\n" + 
+				"				\"href\" : \"in\", \r\n" + 
+				"				\"mediaType\": \"application/exi\" \r\n" + 
+				"			},\r\n" + 
+				"			{\r\n" + 
+				"				\"href\" : \"http://mytemp.example.com:8080/in\",\r\n" + 
+				"				\"mediaType\": \"application/json\"\r\n" + 
+				"			}]									\r\n" + 
+				"		},\r\n" + 
+				"		{\r\n" + 
+				"			\"@type\": [\"Action\",\"actuator:fadeOut\"],\r\n" + 
+				"			\"name\": \"fadeOut\",\r\n" + 
+				"			\"inputData\": { \"type\": \"integer\" },\r\n" + 
+				"			\"link\": [{\r\n" + 
+				"				\"href\" : \"out\", \r\n" + 
+				"				\"mediaType\": \"application/exi\" \r\n" + 
+				"			},\r\n" + 
+				"			{\r\n" + 
+				"				\"href\" : \"http://mytemp.example.com:8080/out\",\r\n" + 
+				"				\"mediaType\": \"application/json\"\r\n" + 
+				"			}]									\r\n" + 
+				"		},\r\n" + 
+				"		{\r\n" + 
+				"			\"@type\": [\"Event\",\"actuator:alert\"],\r\n" + 
+				"			\"name\": \"criticalCondition\",\r\n" + 
+				"			\"outputData\": { \"type\": \"string\" },\r\n" + 
+				"			\"link\": [{\r\n" + 
+				"              \"href\" : \"ev\",\r\n" + 
+				"              \"mediaType\": \"application/exi\"\r\n" + 
+				"            }]	\r\n" + 
+				"		}\r\n" + 
+				"	]\r\n" + 
 				"}";
 		InputStream isJSON = new ByteArrayInputStream(s.getBytes(StandardCharsets.UTF_8));
 		

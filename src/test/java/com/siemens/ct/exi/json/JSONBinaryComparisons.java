@@ -186,16 +186,25 @@ public class JSONBinaryComparisons {
 		EXIFactory ef = null;
 		
 		if(false) {
-			// Tests with additional schema (factory) knowledge
-			ef = DefaultEXIFactory.newInstance();
-			// ef.setFidelityOptions(FidelityOptions.createStrict());
-			InputStream isJsonSchema = new FileInputStream("D:\\Projects\\WoT\\thing-description-tests\\wot-td-osaka.jsonschema");
-			// InputStream isJsonSchema = new FileInputStream("D:\\Projects\\WoT\\thing-description-tests\\td-schema-victor.json");
-			
-			File fXSD = File.createTempFile("json", ".xsd");
-			OutputStream osXSD = new FileOutputStream(fXSD);
-			HelperJSONSchema2XSD.jsonSchema2Xsd(isJsonSchema, osXSD);
-			ef.setGrammars(GrammarFactory.newInstance().createGrammars(fXSD.getAbsolutePath()));
+			// dedicated XML schema
+			if(false) {
+				// based on JSON schema
+				// Tests with additional schema (factory) knowledge
+				ef = DefaultEXIFactory.newInstance();
+				// ef.setFidelityOptions(FidelityOptions.createStrict());
+				InputStream isJsonSchema = new FileInputStream("D:\\Projects\\WoT\\thing-description-tests\\wot-td-osaka.jsonschema");
+				// InputStream isJsonSchema = new FileInputStream("D:\\Projects\\WoT\\thing-description-tests\\td-schema-victor.json");
+				
+				File fXSD = File.createTempFile("json", ".xsd");
+				OutputStream osXSD = new FileOutputStream(fXSD);
+				HelperJSONSchema2XSD.jsonSchema2Xsd(isJsonSchema, osXSD);
+				ef.setGrammars(GrammarFactory.newInstance().createGrammars(fXSD.getAbsolutePath()));
+			} else {
+				// based on "manual" XML schema
+				ef = DefaultEXIFactory.newInstance();
+				ef.setGrammars(GrammarFactory.newInstance().createGrammars("D:\\Projects\\WoT\\thing-description-tests\\exi4json-td.xsd"));
+			}
+
 		}
 
 		test(files, removePath, System.out, ef);
