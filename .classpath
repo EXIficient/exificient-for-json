@@ -32,19 +32,19 @@
 			<attribute name="javadoc_location" value="jar:file:/C:/Users/mchn4310/.m2/repository/org/glassfish/javax.json/1.0.4/javax.json-1.0.4-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient/0.9.7/exificient-0.9.7.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient/0.9.7/exificient-0.9.7-sources.jar">
+	<classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient/1.0.0-SNAPSHOT/exificient-1.0.0-SNAPSHOT.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient/1.0.0-SNAPSHOT/exificient-1.0.0-SNAPSHOT-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient/0.9.7/exificient-0.9.7-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient/1.0.0-SNAPSHOT/exificient-1.0.0-SNAPSHOT-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-core/0.9.7/exificient-core-0.9.7.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-core/0.9.7/exificient-core-0.9.7-sources.jar">
+	<classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-core/1.0.0-SNAPSHOT/exificient-core-1.0.0-SNAPSHOT.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-core/1.0.0-SNAPSHOT/exificient-core-1.0.0-SNAPSHOT-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-core/0.9.7/exificient-core-0.9.7-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-core/1.0.0-SNAPSHOT/exificient-core-1.0.0-SNAPSHOT-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-grammars/0.9.7/exificient-grammars-0.9.7.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-grammars/0.9.7/exificient-grammars-0.9.7-sources.jar">
+	<classpathentry kind="var" path="M2_REPO/com/siemens/ct/exi/exificient-grammars/1.0.0-SNAPSHOT/exificient-grammars-1.0.0-SNAPSHOT.jar" sourcepath="M2_REPO/com/siemens/ct/exi/exificient-grammars/1.0.0-SNAPSHOT/exificient-grammars-1.0.0-SNAPSHOT-sources.jar">
 		<attributes>
-			<attribute name="javadoc_location" value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-grammars/0.9.7/exificient-grammars-0.9.7-javadoc.jar!/"/>
+			<attribute name="javadoc_location" value="jar:file:/C:/Users/mchn4310/.m2/repository/com/siemens/ct/exi/exificient-grammars/1.0.0-SNAPSHOT/exificient-grammars-1.0.0-SNAPSHOT-javadoc.jar!/"/>
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="var" path="M2_REPO/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0.jar" sourcepath="M2_REPO/xerces/xercesImpl/2.11.0/xercesImpl-2.11.0-sources.jar">

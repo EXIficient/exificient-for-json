@@ -10,7 +10,7 @@ import org.skyscreamer.jsonassert.JSONAssert;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.siemens.ct.exi.exceptions.EXIException;
+import com.siemens.ct.exi.core.exceptions.EXIException;
 import com.siemens.ct.exi.json.JSONDataTestsV2;
 
 public class EXI4JSONJackonsTest extends JSONDataTestsV2 {

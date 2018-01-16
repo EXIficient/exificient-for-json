@@ -2,12 +2,8 @@ package com.siemens.ct.exi.json.schema;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.io.OutputStream;
 import java.io.StringReader;
 import java.util.Iterator;
-
-import javax.xml.parsers.ParserConfigurationException;
-import javax.xml.transform.TransformerException;
 
 import org.json.JSONArray;
 import org.json.JSONException;

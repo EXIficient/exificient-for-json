@@ -16,9 +16,9 @@ import javax.xml.transform.stream.StreamResult;
 
 import org.xml.sax.InputSource;
 
-import com.siemens.ct.exi.api.sax.EXISource;
-import com.siemens.ct.exi.exceptions.EXIException;
+import com.siemens.ct.exi.core.exceptions.EXIException;
 import com.siemens.ct.exi.json.EXIforJSONGenerator;
+import com.siemens.ct.exi.main.api.sax.EXISource;
 
 //helper to convert JSON into "internal" XML structures
 public class HelperJSON2XML {

@@ -12,7 +12,7 @@ import java.util.List;
 import org.json.JSONException;
 import org.junit.Test;
 
-import com.siemens.ct.exi.exceptions.EXIException;
+import com.siemens.ct.exi.core.exceptions.EXIException;
 
 import junit.framework.TestCase;
 

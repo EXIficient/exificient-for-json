@@ -10,7 +10,7 @@ import com.fasterxml.jackson.core.Base64Variant;
 import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.base.GeneratorBase;
 import com.fasterxml.jackson.core.io.IOContext;
-import com.siemens.ct.exi.exceptions.EXIException;
+import com.siemens.ct.exi.core.exceptions.EXIException;
 import com.siemens.ct.exi.json.EXIforJSONGenerator;
 
 public class EXI4JSONGenerator extends GeneratorBase {

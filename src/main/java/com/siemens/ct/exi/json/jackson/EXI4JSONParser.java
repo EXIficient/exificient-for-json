@@ -15,7 +15,7 @@ import com.fasterxml.jackson.core.ObjectCodec;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.core.base.ParserMinimalBase;
 import com.fasterxml.jackson.core.io.IOContext;
-import com.siemens.ct.exi.exceptions.EXIException;
+import com.siemens.ct.exi.core.exceptions.EXIException;
 import com.siemens.ct.exi.json.EXIforJSONParser;
 import com.siemens.ct.exi.json.EXIforJSONParser.EXI4JSONEvent;
 

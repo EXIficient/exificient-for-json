@@ -36,15 +36,15 @@ import javax.json.Json;
 import javax.json.stream.JsonParser;
 import javax.json.stream.JsonParser.Event;
 
-import com.siemens.ct.exi.EXIBodyEncoder;
-import com.siemens.ct.exi.EXIFactory;
-import com.siemens.ct.exi.EXIStreamEncoder;
-import com.siemens.ct.exi.exceptions.EXIException;
-import com.siemens.ct.exi.values.BooleanValue;
-import com.siemens.ct.exi.values.FloatValue;
-import com.siemens.ct.exi.values.IntegerValue;
-import com.siemens.ct.exi.values.StringValue;
-import com.siemens.ct.exi.values.Value;
+import com.siemens.ct.exi.core.EXIBodyEncoder;
+import com.siemens.ct.exi.core.EXIFactory;
+import com.siemens.ct.exi.core.EXIStreamEncoder;
+import com.siemens.ct.exi.core.exceptions.EXIException;
+import com.siemens.ct.exi.core.values.BooleanValue;
+import com.siemens.ct.exi.core.values.FloatValue;
+import com.siemens.ct.exi.core.values.IntegerValue;
+import com.siemens.ct.exi.core.values.StringValue;
+import com.siemens.ct.exi.core.values.Value;
 
 public class EXIforJSONGenerator extends AbstractEXIforJSON {
 

@@ -9,9 +9,9 @@ import java.util.List;
 import org.json.JSONException;
 import org.skyscreamer.jsonassert.JSONAssert;
 
-import com.siemens.ct.exi.EXIFactory;
-import com.siemens.ct.exi.exceptions.EXIException;
-import com.siemens.ct.exi.helpers.DefaultEXIFactory;
+import com.siemens.ct.exi.core.EXIFactory;
+import com.siemens.ct.exi.core.exceptions.EXIException;
+import com.siemens.ct.exi.core.helpers.DefaultEXIFactory;
 
 public class JSONDataTestsV1 extends AbstractJSONDataTests {
 
