@@ -47,7 +47,7 @@ Released with Maven
 <dependency>
     <groupId>com.siemens.ct.exi</groupId>
     <artifactId>exificient-for-json</artifactId>
-    <version>0.9.6</version>
+    <version>0.9.7</version>
 </dependency>
 ```
 
