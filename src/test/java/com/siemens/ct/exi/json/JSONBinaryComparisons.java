@@ -178,7 +178,8 @@ public class JSONBinaryComparisons {
 		
 		// WoT test-bed files
 		{
-			File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\");
+			// File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\");
+			File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\data\\plugfest\\2018-03-prague\\");
 			files = getFilesForFolder(f, ".jsonld", true);
 			removePath = f.getAbsolutePath();
 		}
