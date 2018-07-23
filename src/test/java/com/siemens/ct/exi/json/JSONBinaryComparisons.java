@@ -176,17 +176,25 @@ public class JSONBinaryComparisons {
 //			removePath = f.getAbsolutePath();
 //		}
 		
-		// WoT test-bed files
+		// OCPP test-bed files
 		{
 			// File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\");
-			File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\data\\plugfest\\2018-03-prague\\");
-			files = getFilesForFolder(f, ".jsonld", true);
+			File f = new File("D:\\MCHN4310\\Siemens\\Folien Vortraege\\2018-06 EXI for IEC 63110\\ocpp16_samples\\");
+			files = getFilesForFolder(f, ".json", true);
 			removePath = f.getAbsolutePath();
 		}
 		
+//		// WoT test-bed files
+//		{
+//			// File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\");
+//			File f = new File("D:\\Projects\\WoT\\wot-thing-description-danielpeintner\\test-bed\\data\\plugfest\\2018-03-prague\\");
+//			files = getFilesForFolder(f, ".jsonld", true);
+//			removePath = f.getAbsolutePath();
+//		}
+		
 		EXIFactory ef = null;
 		
-		if(false) {
+		if(true) {
 			// dedicated XML schema
 			if(false) {
 				// based on JSON schema
@@ -200,10 +208,14 @@ public class JSONBinaryComparisons {
 				OutputStream osXSD = new FileOutputStream(fXSD);
 				HelperJSONSchema2XSD.jsonSchema2Xsd(isJsonSchema, osXSD);
 				ef.setGrammars(GrammarFactory.newInstance().createGrammars(fXSD.getAbsolutePath()));
-			} else {
+			} else if(false) {
 				// based on "manual" XML schema
 				ef = DefaultEXIFactory.newInstance();
 				ef.setGrammars(GrammarFactory.newInstance().createGrammars("D:\\Projects\\WoT\\thing-description-tests\\exi4json-td.xsd"));
+			} else {
+				// based on "manual" XML schema
+				ef = DefaultEXIFactory.newInstance();
+				ef.setGrammars(GrammarFactory.newInstance().createGrammars("D:\\MCHN4310\\Siemens\\Folien Vortraege\\2018-06 EXI for IEC 63110\\ocpp16_samples\\OCPP-JSON.xsd"));
 			}
 
 		}
