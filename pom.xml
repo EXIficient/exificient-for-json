@@ -2,13 +2,13 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.siemens.ct.exi</groupId>
 	<artifactId>exificient-for-json</artifactId>
-	<version>1.0.1</version>
+	<version>1.0.2-SNAPSHOT</version>
 	<name>EXIficient for JSON</name>
 	<scm>
 		<connection>scm:git:git://github.com/EXIficient/exificient-for-json.git</connection>
 		<developerConnection>scm:git:https://github.com/EXIficient/exificient-for-json.git</developerConnection>
 		<url>https://github.com/EXIficient/exificient-for-json</url>
-	  <tag>v1.0.1</tag>
+	  <tag>HEAD</tag>
   </scm>
 	
 	<build>
