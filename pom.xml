@@ -2,7 +2,7 @@
 	<modelVersion>4.0.0</modelVersion>
 	<groupId>com.siemens.ct.exi</groupId>
 	<artifactId>exificient-for-json</artifactId>
-	<version>1.0.2-SNAPSHOT</version>
+	<version>1.0.4-SNAPSHOT</version>
 	<name>EXIficient for JSON</name>
 	<scm>
 		<connection>scm:git:git://github.com/EXIficient/exificient-for-json.git</connection>
@@ -56,7 +56,7 @@
 		<dependency>
 			<groupId>com.siemens.ct.exi</groupId>
 			<artifactId>exificient</artifactId>
-			<version>1.0.2-SNAPSHOT</version>
+			<version>1.0.4</version><!-- -SNAPSHOT -->
 		</dependency>
 		<!-- Jackson support   -->
 		<dependency>
